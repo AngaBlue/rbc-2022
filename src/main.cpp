@@ -37,11 +37,11 @@ tcs3200 TCS_RIGHT(S0, S1, S2, S3, C_OUT_RIGHT);
 
 // Define RGB values for colours, these must match the same order as the enum
 int RGBColors[COLOUR_COUNT][3] = {
-    {6, 9, 10},   // Green
-    {35, 23, 14}, // Yellow
-    {25, 7, 9}, // Red
-    {5, 4, 5},   // Black
-    {52, 47, 60} // White
+    {6, 9, 10},     // Green
+    {35, 23, 14},   // Yellow
+    {25, 7, 9},     // Red
+    {5, 4, 5},      // Black
+    {52, 47, 60}    // White
 };
 
 void move(Direction direction)
@@ -95,8 +95,10 @@ void move(Direction direction)
 
 void setup()
 {
+    // Begin serial communication for logging
     Serial.begin(9600);
 
+    // Initialise all motor pins.  The colour sensors are initialised in the sensor constructor.
     pinMode(A0, OUTPUT);
     pinMode(A1, OUTPUT);
     pinMode(A2, OUTPUT);
