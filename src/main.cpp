@@ -13,6 +13,8 @@
 #define COut1 13
 #define COut2 12
 
+#define UOut 3
+
 // Colour defines
 int RGBColors[COLOR_COUNT][3] = {
     {255, 0, 0}, // Red
