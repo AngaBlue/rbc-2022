@@ -54,9 +54,25 @@ int RGBColorsRight[COLOUR_COUNT][3] = {
     {142, 125, 166}  // White
 };
 
+enum class Side {
+    LEFT,
+    RIGHT,
+    UNBIASED
+};
+
+typedef struct State {
+    Side side;
+    Colour colour;
+} State;
+
 // Sensors
 tcs3200 TCS_LEFT(S0, S1, S2, S3, C_OUT_LEFT);
 tcs3200 TCS_RIGHT(S0, S1, S2, S3, C_OUT_RIGHT);
+
+State state {
+    Side::UNBIASED,
+    Colour::BLACK
+};
 
 /**
  * @brief Moves the robot in the direction specified.
@@ -66,10 +82,11 @@ tcs3200 TCS_RIGHT(S0, S1, S2, S3, C_OUT_RIGHT);
 void move(Direction direction)
 {
     Serial.println("Moving " + directionNameFromEnum(direction));
+    Serial.println("Path: " + colourNameFromEnum(state.colour) + " Bias: " + (state.side == Side::LEFT ? "Left" : "Right"));
 
     switch (direction)
     {
-    case LEFT:
+    case Direction::LEFT:
         analogWrite(LEFT_ENA, 255 TURN_OFFSET);
         analogWrite(RIGHT_ENA, 255 RIGHT_MOTOR_OFFSET TURN_OFFSET);
         digitalWrite(LEFT_IN1, LOW);
@@ -77,7 +94,7 @@ void move(Direction direction)
         digitalWrite(RIGHT_IN1, HIGH);
         digitalWrite(RIGHT_IN2, LOW);
         break;
-    case RIGHT:
+    case Direction::RIGHT:
         analogWrite(LEFT_ENA, 255 TURN_OFFSET);
         analogWrite(RIGHT_ENA, 255 RIGHT_MOTOR_OFFSET TURN_OFFSET);
         digitalWrite(LEFT_IN1, HIGH);
@@ -85,7 +102,7 @@ void move(Direction direction)
         digitalWrite(RIGHT_IN1, LOW);
         digitalWrite(RIGHT_IN2, LOW);
         break;
-    case FORWARD:
+    case Direction::FORWARD:
         analogWrite(LEFT_ENA, SPEED);
         analogWrite(RIGHT_ENA, SPEED RIGHT_MOTOR_OFFSET);
         digitalWrite(LEFT_IN1, HIGH);
@@ -93,7 +110,7 @@ void move(Direction direction)
         digitalWrite(RIGHT_IN1, HIGH);
         digitalWrite(RIGHT_IN2, LOW);
         break;
-    case BACKWARD:
+    case Direction::BACKWARD:
         analogWrite(LEFT_ENA, SPEED);
         analogWrite(RIGHT_ENA, SPEED RIGHT_MOTOR_OFFSET);
         digitalWrite(LEFT_IN1, LOW);
@@ -101,7 +118,7 @@ void move(Direction direction)
         digitalWrite(RIGHT_IN1, LOW);
         digitalWrite(RIGHT_IN2, HIGH);
         break;
-    case SLOW:
+    case Direction::SLOW:
         analogWrite(LEFT_ENA, SPEED / 10);
         analogWrite(RIGHT_ENA, (SPEED RIGHT_MOTOR_OFFSET) / 10);
         digitalWrite(LEFT_IN1, HIGH);
@@ -109,7 +126,7 @@ void move(Direction direction)
         digitalWrite(RIGHT_IN1, HIGH);
         digitalWrite(RIGHT_IN2, LOW);
         break;
-    case STOP:
+    case Direction::STOP:
         analogWrite(LEFT_ENA, SPEED);
         analogWrite(RIGHT_ENA, SPEED RIGHT_MOTOR_OFFSET);
         digitalWrite(LEFT_IN1, LOW);
@@ -149,25 +166,37 @@ void loop()
     Serial.println("Left: " + String(rgb_left.r) + " " + String(rgb_left.g) + " " + String(rgb_left.b));
     Serial.println("Right: " + String(rgb_right.r) + " " + String(rgb_right.g) + " " + String(rgb_right.b));
 
-    // Find direction
-    Direction direction = FORWARD;
-    if (c_left == BLACK)
-    {
-        direction = LEFT;
+    // If unbiased or left side, and non-white colour, track that path
+    if (c_left != Colour::WHITE && state.side != Side::RIGHT) {
+        state.side = c_right == Colour::BLACK ? Side::LEFT : Side::UNBIASED;
+        state.colour = c_left;
     }
-    else if (c_right == BLACK)
+
+    // If unbiased or right side, and non-white colour, track that path
+    if (c_right != Colour::WHITE && state.side != Side::LEFT) {
+        state.side = c_right == Colour::BLACK ? Side::RIGHT : Side::UNBIASED;
+        state.colour = c_right;
+    }
+
+    // Find direction
+    Direction direction = Direction::FORWARD;
+    if (c_left == state.colour)
     {
-        direction = RIGHT;
+        direction = Direction::LEFT;
+    }
+    else if (c_right == state.colour)
+    {
+        direction = Direction::RIGHT;
     }
 
     // Move the robot
     move(direction);
-    if (direction != FORWARD) {
+    if (direction != Direction::FORWARD) {
         // delay(MOVEMENT_CHECK_DELAY);
     }
     else {
         // delay(MOVEMENT_CHECK_DELAY);
-        move(SLOW);
+        move(Direction::SLOW);
         delay(MOVEMENT_CHECK_DELAY);
     }
 }

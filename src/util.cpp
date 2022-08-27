@@ -5,15 +5,15 @@ String colourNameFromEnum(Colour input)
 {
     switch (input)
     {
-    case RED:
+    case Colour::RED:
         return "RED";
-    case GREEN:
+    case Colour::GREEN:
         return "GREEN";
-    case BLACK:
+    case Colour::BLACK:
         return "BLACK";
-    case YELLOW:
+    case Colour::YELLOW:
         return "YELLOW";
-    case WHITE:
+    case Colour::WHITE:
         return "WHITE";
     default:
         return "UNKNOWN";
@@ -24,15 +24,15 @@ String directionNameFromEnum(Direction direction)
 {
     switch (direction)
     {
-    case LEFT:
+    case Direction::LEFT:
         return "LEFT";
-    case RIGHT:
+    case Direction::RIGHT:
         return "RIGHT";
-    case FORWARD:
+    case Direction::FORWARD:
         return "FORWARD";
-    case BACKWARD:
+    case Direction::BACKWARD:
         return "BACKWARD";
-    case STOP:
+    case Direction::STOP:
         return "STOP";
     default:
         return "UNKNOWN";

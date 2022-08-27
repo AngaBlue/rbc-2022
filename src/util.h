@@ -6,7 +6,7 @@
 /**
  * @brief The direction in which the Robot can move.
  */
-enum Direction
+enum class Direction
 {
     LEFT,
     RIGHT,
@@ -19,7 +19,7 @@ enum Direction
 /**
  * @brief The colour of the track.
  */
-enum Colour
+enum class Colour
 {
     GREEN,
     YELLOW,
