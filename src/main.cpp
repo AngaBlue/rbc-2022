@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <tcs3200.h> 
 
 // General Color Sensor pins
 #define S0 11
