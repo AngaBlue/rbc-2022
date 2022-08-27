@@ -32,12 +32,12 @@ int RGBColors[COLOR_COUNT][3] = {
     {255, 255, 255} // White
 };
 
-String ColorNames[COLOR_COUNT] = {
-    "Red",
-    "Green",
-    "Black",
-    "Yellow",
-    "White"
+char ColorNames[COLOR_COUNT] = {
+    'R', // Red
+    'G', // Green
+    'K', // Black
+    'Y', // Yellow
+    'W'  // White
 };
 
 void setup() {
