@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include <tcs3200.h>
+#include "includes/tcs3200.h"
 #include <stdint.h>
 
 #define COLOR_COUNT 5
@@ -11,8 +11,8 @@
 #define S3 6
 
 // Colour Sensor Output
-#define C_OUT_0 13
-#define C_OUT_1 12
+#define C_OUT_LEFT 13
+#define C_OUT_RIGHT 12
 
 // Ultrasonic Sensor Control
 #define UT 2
@@ -20,17 +20,35 @@
 // Ultrasonic Output
 #define UOut 3
 
-typedef struct Color {
-    uint8_t R;
-    uint8_t G;
-    uint8_t B;
-} Color;
-
 // Sensors
-tcs3200 TCS_0(S0, S1, S2, S3, C_OUT_0);
-tcs3200 TCS_1(S0, S1, S2, S3, C_OUT_1);
+tcs3200 TCS_LEFT(S0, S1, S2, S3, C_OUT_LEFT);
+tcs3200 TCS_RIGHT(S0, S1, S2, S3, C_OUT_RIGHT);
 
-Color C0, C1;
+// Define the colours using an enum
+enum Color {
+    RED,
+    GREEN,
+    BLACK,
+    YELLOW,
+    WHITE
+};
+
+String colourNameFromEnum(Color input) {
+    switch (input) {
+        case RED:
+            return "RED";
+        case GREEN:
+            return "GREEN";
+        case BLACK:
+            return "BLACK";
+        case YELLOW:
+            return "YELLOW";
+        case WHITE:
+            return "WHITE";
+        default:
+            return "UNKNOWN";
+    }
+}
 
 // Colour defines
 int RGBColors[COLOR_COUNT][3] = {
@@ -55,18 +73,9 @@ void setup() {
 
 void loop() {
     // Read both color sensors
-    auto start = micros();
-    C0.R = TCS_0.colorRead('r');
-    C0.G = TCS_0.colorRead('g');
-    C0.B = TCS_0.colorRead('b');
-    C1.R = TCS_1.colorRead('r');
-    C1.G = TCS_1.colorRead('g');
-    C1.B = TCS_1.colorRead('b');
-    Serial.println(micros() - start);
+    auto c_left = TCS_LEFT.closestColorIndex(RGBColors, COLOR_COUNT);
+    auto c_right = TCS_RIGHT.closestColorIndex(RGBColors, COLOR_COUNT);
 
     // Print the color values
-    Serial.println("C0: #" + String(C0.R)  + String(C0.G) + " " + String(C0.B));
-    Serial.println(TCS_0.closestColor(RGBColors, ColorNames, COLOR_COUNT));
-
-    delay(300);
+    Serial.println("Left: " + colourNameFromEnum((Color)c_left) + " Right: " + colourNameFromEnum((Color)c_right));
 }
