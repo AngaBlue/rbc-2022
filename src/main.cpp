@@ -7,7 +7,7 @@
 // Number of colours to detect
 #define COLOUR_COUNT 5
 #define SPEED 100
-#define SCALING 100
+#define SENSOR_READOUT_SCALING 100
 #define RIGHT_MOTOR_OFFSET *0.9
 #define TURN_OFFSET *1
 #define MOVEMENT_CHECK_DELAY 0
