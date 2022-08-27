@@ -1,5 +1,19 @@
 #include <Arduino.h>
 
+// General Color Sensor pins
+#define S0 11
+#define S1 8
+#define S2 7
+#define S3 6
+
+// Colour Sensor Out
+#define COut1 13
+#define COut2 12
+
+// Ultrasonc
+
+
+
 void setup() {
   // put your setup code here, to run once:
 }
