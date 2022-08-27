@@ -31,10 +31,6 @@
 #define RIGHT_IN1 A4
 #define RIGHT_IN2 A5
 
-// Sensors
-tcs3200 TCS_LEFT(S0, S1, S2, S3, C_OUT_LEFT);
-tcs3200 TCS_RIGHT(S0, S1, S2, S3, C_OUT_RIGHT);
-
 // Define RGB values for colours, these must match the same order as the enum
 int RGBColors[COLOUR_COUNT][3] = {
     {6, 9, 10},     // Green
@@ -44,6 +40,15 @@ int RGBColors[COLOUR_COUNT][3] = {
     {52, 47, 60}    // White
 };
 
+// Sensors
+tcs3200 TCS_LEFT(S0, S1, S2, S3, C_OUT_LEFT);
+tcs3200 TCS_RIGHT(S0, S1, S2, S3, C_OUT_RIGHT);
+
+/**
+ * @brief Moves the robot in the direction specified.
+ * 
+ * @param direction The direction to move the robot in.
+ */
 void move(Direction direction)
 {
     Serial.println("Moving " + directionNameFromEnum(direction));
