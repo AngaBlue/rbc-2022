@@ -114,18 +114,14 @@ void loop() {
     // Print the color values
     Serial.println("Left: " + colourNameFromEnum(c_left) + " Right: " + colourNameFromEnum(c_right));
 
-    // Track 1 logic
-    if (c_left == BLACK && c_right == BLACK) {
-        // Both sensors are on black, so we are on the line
-        // Move forward
-        Serial.println("Both sensors on black, moving forward");
-        analogWrite(LEFT_ENA, 255);
-        analogWrite(RIGHT_ENA, 255);
-        digitalWrite(LEFT_IN1, HIGH);
-        digitalWrite(LEFT_IN2, LOW);
-        digitalWrite(RIGHT_IN1, HIGH);
-        digitalWrite(RIGHT_IN2, LOW);
-    } (RIGHT_IN2, HIGH);
+    Direction direction = STOP;
+    if (c_left == BLACK && c_right == WHITE) {
+        direction = LEFT;
+    } else if (c_left == WHITE && c_right == BLACK) {
+        direction = RIGHT;
+    } else if (c_left == WHITE && c_right == WHITE) {
+        direction = FORWARD;
+    }
 }
 
 void move(Direction direction) {
@@ -133,40 +129,40 @@ void move(Direction direction) {
 
     switch (direction) {
         case LEFT:
-            analogWrite(LEFT_ENA, 255);
-            analogWrite(RIGHT_ENA, 255);
+            analogWrite(LEFT_ENA, HIGH);
+            analogWrite(RIGHT_ENA, HIGH);
             digitalWrite(LEFT_IN1, LOW);
             digitalWrite(LEFT_IN2, HIGH);
             digitalWrite(RIGHT_IN1, HIGH);
             digitalWrite(RIGHT_IN2, LOW);
             break;
         case RIGHT:
-            analogWrite(LEFT_ENA, 255);
-            analogWrite(RIGHT_ENA, 255);
+            analogWrite(LEFT_ENA, HIGH);
+            analogWrite(RIGHT_ENA, HIGH);
             digitalWrite(LEFT_IN1, HIGH);
             digitalWrite(LEFT_IN2, LOW);
             digitalWrite(RIGHT_IN1, LOW);
             digitalWrite(RIGHT_IN2, HIGH);
             break;
         case FORWARD:
-            analogWrite(LEFT_ENA, 255);
-            analogWrite(RIGHT_ENA, 255);
+            analogWrite(LEFT_ENA, HIGH);
+            analogWrite(RIGHT_ENA, HIGH);
             digitalWrite(LEFT_IN1, HIGH);
             digitalWrite(LEFT_IN2, LOW);
             digitalWrite(RIGHT_IN1, HIGH);
             digitalWrite(RIGHT_IN2, LOW);
             break;
         case BACKWARD:
-            analogWrite(LEFT_ENA, 255);
-            analogWrite(RIGHT_ENA, 255);
+            analogWrite(LEFT_ENA, HIGH);
+            analogWrite(RIGHT_ENA, HIGH);
             digitalWrite(LEFT_IN1, LOW);
             digitalWrite(LEFT_IN2, HIGH);
             digitalWrite(RIGHT_IN1, LOW);
             digitalWrite(RIGHT_IN2, HIGH);
             break;
         case STOP:
-            analogWrite(LEFT_ENA, 0);
-            analogWrite(RIGHT_ENA, 0);
+            analogWrite(LEFT_ENA, LOW);
+            analogWrite(RIGHT_ENA, LOW);
             digitalWrite(LEFT_IN1, LOW);
             digitalWrite(LEFT_IN2, LOW);
             digitalWrite(RIGHT_IN1, LOW);
