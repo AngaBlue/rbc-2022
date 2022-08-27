@@ -85,45 +85,6 @@ String directionNameFromEnum(Direction direction) {
     }
 }
 
-// Colour defines
-int RGBColors[COLOR_COUNT][3] = {
-    {25, 7, 9}, // Red
-    {6, 9, 10}, // Green
-    {5, 4, 5}, // Black
-    {35, 23, 14}, // Yellow
-    {52, 47, 60} // White
-};
-
-String ColorNames[COLOR_COUNT] = {
-    "R", // Red
-    "G", // Green
-    "K", // Black
-    "Y", // Yellow
-    "W"  // White
-};
-
-void setup() {
-    Serial.begin(9600);
-}
-
-void loop() {
-    // Read both color sensors
-    Color c_left = (Color)TCS_LEFT.closestColorIndex(RGBColors, COLOR_COUNT);
-    Color c_right = (Color)TCS_RIGHT.closestColorIndex(RGBColors, COLOR_COUNT);
-
-    // Print the color values
-    Serial.println("Left: " + colourNameFromEnum(c_left) + " Right: " + colourNameFromEnum(c_right));
-
-    Direction direction = STOP;
-    if (c_left == BLACK && c_right == WHITE) {
-        direction = LEFT;
-    } else if (c_left == WHITE && c_right == BLACK) {
-        direction = RIGHT;
-    } else if (c_left == WHITE && c_right == WHITE) {
-        direction = FORWARD;
-    }
-}
-
 void move(Direction direction) {
     Serial.println("Moving " + directionNameFromEnum(direction));
 
@@ -168,8 +129,48 @@ void move(Direction direction) {
             digitalWrite(RIGHT_IN1, LOW);
             digitalWrite(RIGHT_IN2, LOW);
             break;
-        default:
-            Serial.println("Unknown direction");
-            break;
     }
+}
+
+// Colour defines
+int RGBColors[COLOR_COUNT][3] = {
+    {25, 7, 9}, // Red
+    {6, 9, 10}, // Green
+    {5, 4, 5}, // Black
+    {35, 23, 14}, // Yellow
+    {52, 47, 60} // White
+};
+
+String ColorNames[COLOR_COUNT] = {
+    "R", // Red
+    "G", // Green
+    "K", // Black
+    "Y", // Yellow
+    "W"  // White
+};
+
+void setup() {
+    Serial.begin(9600);
+}
+
+void loop() {
+    // Read both color sensors
+    Color c_left = (Color)TCS_LEFT.closestColorIndex(RGBColors, COLOR_COUNT);
+    Color c_right = (Color)TCS_RIGHT.closestColorIndex(RGBColors, COLOR_COUNT);
+
+    // Print the color values
+    Serial.println("Left: " + colourNameFromEnum(c_left) + " Right: " + colourNameFromEnum(c_right));
+
+    // Find direction 
+    Direction direction = STOP;
+    if (c_left == BLACK && c_right == WHITE) {
+        direction = LEFT;
+    } else if (c_left == WHITE && c_right == BLACK) {
+        direction = RIGHT;
+    } else if (c_left == WHITE && c_right == WHITE) {
+        direction = FORWARD;
+    }
+
+    // Move the robot
+    move(direction);
 }
