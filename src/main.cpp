@@ -3,15 +3,16 @@
 #include "libs/tcs3200.h"
 #include "util.h"
 
-#define COLOR_COUNT 5
+// Number of colours to detect
+#define COLOUR_COUNT 5
 
-// General Color Sensor pins
+// Shared colour sensor pins
 #define S0 11
 #define S1 8
 #define S2 7
 #define S3 6
 
-// Colour Sensor Output
+// Colour sensor output pins
 #define C_OUT_LEFT 13
 #define C_OUT_RIGHT 12
 
@@ -34,8 +35,8 @@
 tcs3200 TCS_LEFT(S0, S1, S2, S3, C_OUT_LEFT);
 tcs3200 TCS_RIGHT(S0, S1, S2, S3, C_OUT_RIGHT);
 
-// Colour defines
-int RGBColors[COLOR_COUNT][3] = {
+// Define RGB values for colours, these must match the same order as the enum
+int RGBColors[COLOUR_COUNT][3] = {
     {6, 9, 10},   // Green
     {35, 23, 14}, // Yellow
     {25, 7, 9}, // Red
@@ -107,8 +108,8 @@ void setup()
 void loop()
 {
     // Read both color sensors
-    Colour c_left = (Colour)TCS_LEFT.closestColorIndex(RGBColors, COLOR_COUNT);
-    Colour c_right = (Colour)TCS_RIGHT.closestColorIndex(RGBColors, COLOR_COUNT);
+    Colour c_left = (Colour)TCS_LEFT.closestColorIndex(RGBColors, COLOUR_COUNT);
+    Colour c_right = (Colour)TCS_RIGHT.closestColorIndex(RGBColors, COLOUR_COUNT);
 
     // Print the color values
     Serial.println("Left: " + colourNameFromEnum(c_left) + " Right: " + colourNameFromEnum(c_right));
