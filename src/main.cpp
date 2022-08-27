@@ -9,15 +9,9 @@
 #define S2 7
 #define S3 6
 
-<<<<<<< HEAD
-// Colour Sensor Out
+// Colour Sensor Output
 #define C_OUT_0 13
 #define C_OUT_1 12
-=======
-// Colour Sensor Output
-#define COut1 13
-#define COut2 12
->>>>>>> f8858a6f825e9347426b7282cb48b3e95ae3dd3b
 
 // Ultrasonic Sensor Control
 #define UT 2
@@ -25,13 +19,9 @@
 // Ultrasonic Output
 #define UOut 3
 
-<<<<<<< HEAD
 // Sensors
 tcs3200 TCS_0(S0, S1, S2, S3, C_OUT_0);
 tcs3200 TCS_1(S0, S1, S2, S3, C_OUT_1);
-=======
-
->>>>>>> f8858a6f825e9347426b7282cb48b3e95ae3dd3b
 
 // Colour defines
 int RGBColors[COLOR_COUNT][3] = {
