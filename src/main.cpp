@@ -20,17 +20,25 @@
 // Ultrasonic Output
 #define UOut 3
 
+typedef struct Color {
+    uint8_t R;
+    uint8_t G;
+    uint8_t B;
+} Color;
+
 // Sensors
 tcs3200 TCS_0(S0, S1, S2, S3, C_OUT_0);
 tcs3200 TCS_1(S0, S1, S2, S3, C_OUT_1);
 
+Color C0, C1;
+
 // Colour defines
 int RGBColors[COLOR_COUNT][3] = {
-    {255, 0, 0}, // Red
-    {0, 255, 0}, // Green
-    {0, 0, 0}, // Black
-    {255, 255, 0}, // Yellow
-    {255, 255, 255} // White
+    {25, 7, 9}, // Red
+    {6, 9, 10}, // Green
+    {5, 4, 5}, // Black
+    {35, 23, 14}, // Yellow
+    {52, 47, 60} // White
 };
 
 String ColorNames[COLOR_COUNT] = {
@@ -41,16 +49,24 @@ String ColorNames[COLOR_COUNT] = {
     "W"  // White
 };
 
-uint8_t R, G, B;
-
 void setup() {
     Serial.begin(9600);
 }
 
 void loop() {
-    R = TCS_0.colorRead('r');
-    G = TCS_0.colorRead('g');
-    B = TCS_0.colorRead('b');
-    Serial.println("R" + String(R) + " G" + String(G) + " B" + String(B));
+    // Read both color sensors
+    auto start = micros();
+    C0.R = TCS_0.colorRead('r');
+    C0.G = TCS_0.colorRead('g');
+    C0.B = TCS_0.colorRead('b');
+    C1.R = TCS_1.colorRead('r');
+    C1.G = TCS_1.colorRead('g');
+    C1.B = TCS_1.colorRead('b');
+    Serial.println(micros() - start);
+
+    // Print the color values
+    Serial.println("C0: #" + String(C0.R)  + String(C0.G) + " " + String(C0.B));
     Serial.println(TCS_0.closestColor(RGBColors, ColorNames, COLOR_COUNT));
+
+    delay(300);
 }
