@@ -90,40 +90,40 @@ void move(Direction direction) {
 
     switch (direction) {
         case LEFT:
-            analogWrite(LEFT_ENA, HIGH);
-            analogWrite(RIGHT_ENA, HIGH);
+            digitalWrite(LEFT_ENA, HIGH);
+            digitalWrite(RIGHT_ENA, HIGH);
             digitalWrite(LEFT_IN1, LOW);
             digitalWrite(LEFT_IN2, HIGH);
             digitalWrite(RIGHT_IN1, HIGH);
             digitalWrite(RIGHT_IN2, LOW);
             break;
         case RIGHT:
-            analogWrite(LEFT_ENA, HIGH);
-            analogWrite(RIGHT_ENA, HIGH);
+            digitalWrite(LEFT_ENA, HIGH);
+            digitalWrite(RIGHT_ENA, HIGH);
             digitalWrite(LEFT_IN1, HIGH);
             digitalWrite(LEFT_IN2, LOW);
             digitalWrite(RIGHT_IN1, LOW);
             digitalWrite(RIGHT_IN2, HIGH);
             break;
         case FORWARD:
-            analogWrite(LEFT_ENA, HIGH);
-            analogWrite(RIGHT_ENA, HIGH);
+            digitalWrite(LEFT_ENA, HIGH);
+            digitalWrite(RIGHT_ENA, HIGH);
             digitalWrite(LEFT_IN1, HIGH);
             digitalWrite(LEFT_IN2, LOW);
             digitalWrite(RIGHT_IN1, HIGH);
             digitalWrite(RIGHT_IN2, LOW);
             break;
         case BACKWARD:
-            analogWrite(LEFT_ENA, HIGH);
-            analogWrite(RIGHT_ENA, HIGH);
+            digitalWrite(LEFT_ENA, HIGH);
+            digitalWrite(RIGHT_ENA, HIGH);
             digitalWrite(LEFT_IN1, LOW);
             digitalWrite(LEFT_IN2, HIGH);
             digitalWrite(RIGHT_IN1, LOW);
             digitalWrite(RIGHT_IN2, HIGH);
             break;
         case STOP:
-            analogWrite(LEFT_ENA, LOW);
-            analogWrite(RIGHT_ENA, LOW);
+            digitalWrite(LEFT_ENA, LOW);
+            digitalWrite(RIGHT_ENA, LOW);
             digitalWrite(LEFT_IN1, LOW);
             digitalWrite(LEFT_IN2, LOW);
             digitalWrite(RIGHT_IN1, LOW);
@@ -151,6 +151,14 @@ String ColorNames[COLOR_COUNT] = {
 
 void setup() {
     Serial.begin(9600);
+
+    pinMode(A0, OUTPUT);
+    pinMode(A1, OUTPUT);
+    pinMode(A2, OUTPUT);
+    pinMode(A3, OUTPUT);
+    pinMode(A4, OUTPUT);
+    pinMode(A5, OUTPUT);
+
 }
 
 void loop() {
@@ -162,7 +170,7 @@ void loop() {
     Serial.println("Left: " + colourNameFromEnum(c_left) + " Right: " + colourNameFromEnum(c_right));
 
     // Find direction 
-    Direction direction = STOP;
+    Direction direction = FORWARD;
     if (c_left == BLACK && c_right == WHITE) {
         direction = LEFT;
     } else if (c_left == WHITE && c_right == BLACK) {
