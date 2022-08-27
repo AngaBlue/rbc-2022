@@ -6,10 +6,10 @@
 
 // Number of colours to detect
 #define COLOUR_COUNT 5
-#define SPEED 255
+#define SPEED 100
 #define SCALING 100
 #define RIGHT_MOTOR_OFFSET * 0.9
-#define TURN_OFFSET * 0.4
+#define TURN_OFFSET * 1
 #define MOVEMENT_CHECK_DELAY 0
 
 // Shared colour sensor pins
@@ -87,16 +87,16 @@ void move(Direction direction)
     switch (direction)
     {
     case Direction::LEFT:
-        analogWrite(LEFT_ENA, 255 TURN_OFFSET);
-        analogWrite(RIGHT_ENA, 255 RIGHT_MOTOR_OFFSET TURN_OFFSET);
+        analogWrite(LEFT_ENA, SPEED TURN_OFFSET);
+        analogWrite(RIGHT_ENA, SPEED RIGHT_MOTOR_OFFSET TURN_OFFSET);
         digitalWrite(LEFT_IN1, LOW);
         digitalWrite(LEFT_IN2, LOW);
         digitalWrite(RIGHT_IN1, HIGH);
         digitalWrite(RIGHT_IN2, LOW);
         break;
     case Direction::RIGHT:
-        analogWrite(LEFT_ENA, 255 TURN_OFFSET);
-        analogWrite(RIGHT_ENA, 255 RIGHT_MOTOR_OFFSET TURN_OFFSET);
+        analogWrite(LEFT_ENA, SPEED TURN_OFFSET);
+        analogWrite(RIGHT_ENA, SPEED RIGHT_MOTOR_OFFSET TURN_OFFSET);
         digitalWrite(LEFT_IN1, HIGH);
         digitalWrite(LEFT_IN2, LOW);
         digitalWrite(RIGHT_IN1, LOW);
@@ -191,12 +191,4 @@ void loop()
 
     // Move the robot
     move(direction);
-    if (direction != Direction::FORWARD) {
-        // delay(MOVEMENT_CHECK_DELAY);
-    }
-    else {
-        // delay(MOVEMENT_CHECK_DELAY);
-        move(Direction::SLOW);
-        delay(MOVEMENT_CHECK_DELAY);
-    }
 }

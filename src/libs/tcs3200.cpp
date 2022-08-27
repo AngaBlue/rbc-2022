@@ -96,24 +96,10 @@ int tcs3200::colorRead(char color, int scaling)
 	}
 }
 
-String tcs3200::closestColor(int distinctRGB[][3], String distinctColors[], int num_of_colors)
-{
-	String colorReturn = "NA"; // return "NA" if no declared color matches color sensor is reading
-	int index = closestColorIndex(distinctRGB, num_of_colors);
-	return (index == -1 ? colorReturn : distinctColors[index]);
-}
-
-int tcs3200::closestColor(int distinctRGB[][3], int distinctColors[], int num_of_colors)
-{
-	int colorReturn = -1; // return "-1" if no declared color matches color sensor is reading
-	int index = closestColorIndex(distinctRGB, num_of_colors);
-	return (index == -1 ? colorReturn : distinctColors[index]);
-}
-
-int tcs3200::closestColorIndex(int distinctRGB[][3], int num_of_colors, int scaling)
+int tcs3200::closestColorIndex(int distinctRGB[][3], int num_of_colors, int scaling, int const *distance)
 {
 	int index = -1; // return -1 if no declared color matches color sensor is reading
-	int biggestDifference = 765;
+	int smallestDistance = 765;
 	int r, g, b;
 
 	r = colorRead('r', scaling);
@@ -122,64 +108,14 @@ int tcs3200::closestColorIndex(int distinctRGB[][3], int num_of_colors, int scal
 
 	for (int i = 0; i < num_of_colors; i++)
 	{
-		int difference = sqrt(pow(r - distinctRGB[i][0], 2) + pow(g - distinctRGB[i][1], 2) + pow(b - distinctRGB[i][2], 2));
-		if (difference < biggestDifference)
+		int distance = sqrt(pow(r - distinctRGB[i][0], 2) + pow(g - distinctRGB[i][1], 2) + pow(b - distinctRGB[i][2], 2));
+		if (distance < smallestDistance)
 		{
 			index = i;
-			biggestDifference = difference;
+			smallestDistance = distance;
 		}
 	}
 	return index;
-}
-
-int tcs3200::colorMax()
-{
-
-	int r, g, b;
-
-	r = colorRead('r');
-	g = colorRead('g');
-	b = colorRead('b');
-
-	if ((r > g) && (r > b))
-		return 0; // Returns 0 if 'red' is the color with highest value
-
-	if ((g > r) && (g > b))
-		return 1; // Returns 1 if 'green' is the color with highest value
-
-	if ((b > r) && (b > g))
-		return 2; // Returns 2 if 'blue' is the color with highest value
-
-	if (r == g && r == b)
-		return 3; // Returns 3 if all of the colors have the same value
-
-	else
-		return 4; // Returns 4 if none of the statements above are fulfilled
-}
-
-int tcs3200::colorMin()
-{
-
-	int r, g, b;
-
-	r = colorRead('r');
-	g = colorRead('g');
-	b = colorRead('b');
-
-	if ((r < g) && (r < b))
-		return 0; // Returns 0 if 'red' is the color with lowest value
-
-	if ((g < r) && (g < b))
-		return 1; // Returns 1 if 'green' is the color with lowest value
-
-	if ((b < r) && (b < g))
-		return 2; // Returns 2 if 'blue' is the color with lowest value
-
-	if (r == g && r == b)
-		return 3; // Returns 3 if all of the colors have the same value
-
-	else
-		return 4; // Returns 4 if none of the statments above are fulfilled
 }
 
 RGB tcs3200::colorReadRGB(int scaling) 

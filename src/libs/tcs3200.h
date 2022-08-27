@@ -25,7 +25,7 @@ public:
 	int closestColor(int distinctRGB[][3], int distinctColors[], int num_of_colors);
 	int colorMax(void);
 	int colorMin(void);
-	int closestColorIndex(int distinctRGB[][3], int num_of_colors, int scaling = 20);
+	int closestColorIndex(int distinctRGB[][3], int num_of_colors, int scaling, int const *distance);
 	RGB colorReadRGB(int scaling);
 
 
