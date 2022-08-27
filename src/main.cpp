@@ -1,11 +1,13 @@
 #include <Arduino.h>
 #include <stdint.h>
+
 #include "libs/tcs3200.h"
 #include "util.h"
 
 // Number of colours to detect
 #define COLOUR_COUNT 5
-#define SPEED 50
+#define SPEED 120
+#define SCALING 100
 
 // Shared colour sensor pins
 #define S0 11
@@ -24,21 +26,29 @@
 #define U_OUT 3
 
 // Motor Control
-#define LEFT_ENA A3
+#define LEFT_ENA 5
 #define LEFT_IN1 A4
 #define LEFT_IN2 A5
 
-#define RIGHT_ENA A0
+#define RIGHT_ENA 3
 #define RIGHT_IN1 A1
 #define RIGHT_IN2 A2
 
 // Define RGB values for colours, these must match the same order as the enum
-int RGBColors[COLOUR_COUNT][3] = {
-    {6, 9, 10},   // Green
-    {35, 23, 14}, // Yellow
-    {25, 7, 9},   // Red
-    {5, 4, 5},    // Black
-    {52, 47, 60}  // White
+int RGBColorsLeft[COLOUR_COUNT][3] = {
+    {76, 76, 100},  // Green
+    {125, 100, 90}, // Yellow
+    {111, 58, 76},  // Red
+    {47, 41, 55},   // Black
+    {125, 111, 142} // White
+};
+
+int RGBColorsRight[COLOUR_COUNT][3] = {
+    {55, 62, 71},    // Green
+    {125, 100, 90},  // Yellow
+    {111, 58, 76},   // Red
+    {62, 55, 66},    // Black
+    {142, 125, 166}  // White
 };
 
 // Sensors
@@ -52,7 +62,7 @@ tcs3200 TCS_RIGHT(S0, S1, S2, S3, C_OUT_RIGHT);
  */
 void move(Direction direction)
 {
-    // Serial.println("Moving " + directionNameFromEnum(direction));
+    Serial.println("Moving " + directionNameFromEnum(direction));
 
     switch (direction)
     {
@@ -102,7 +112,7 @@ void move(Direction direction)
 void setup()
 {
     // Begin serial communication for logging
-    // Serial.begin(9600);
+    Serial.begin(9600);
 
     // Initialise all motor pins.  The colour sensors are initialised in the sensor constructor.
     pinMode(A0, OUTPUT);
@@ -116,27 +126,31 @@ void setup()
 void loop()
 {
     // Read both color sensors
-    Colour c_left = (Colour)TCS_LEFT.closestColorIndex(RGBColors, COLOUR_COUNT);
-    Colour c_right = (Colour)TCS_RIGHT.closestColorIndex(RGBColors, COLOUR_COUNT);
+    Colour c_left = (Colour)TCS_LEFT.closestColorIndex(RGBColorsLeft, COLOUR_COUNT, SCALING);
+    Colour c_right = (Colour)TCS_RIGHT.closestColorIndex(RGBColorsRight, COLOUR_COUNT, SCALING);
 
     // Print the color values
-    // Serial.println("Left: " + colourNameFromEnum(c_left) + " Right: " + colourNameFromEnum(c_right));
+    Serial.println("Left: " + colourNameFromEnum(c_left) + " Right: " + colourNameFromEnum(c_right));
+
+    auto rgb_left = TCS_LEFT.colorReadRGB(SCALING);
+    auto rgb_right = TCS_RIGHT.colorReadRGB(SCALING);
+
+    Serial.println("Left: " + String(rgb_left.r) + " " + String(rgb_left.g) + " " + String(rgb_left.b));
+    Serial.println("Right: " + String(rgb_right.r) + " " + String(rgb_right.g) + " " + String(rgb_right.b));
 
     // Find direction
     Direction direction = FORWARD;
-    if (c_left == BLACK && c_right == WHITE)
+    if (c_left == BLACK)
     {
         direction = LEFT;
     }
-    else if (c_left == WHITE && c_right == BLACK)
+    else if (c_right == BLACK)
     {
         direction = RIGHT;
-    }
-    else if (c_left == WHITE && c_right == WHITE)
-    {
-        direction = FORWARD;
     }
 
     // Move the robot
     move(direction);
+
+    delay(1000);
 }

@@ -110,15 +110,15 @@ int tcs3200::closestColor(int distinctRGB[][3], int distinctColors[], int num_of
 	return (index == -1 ? colorReturn : distinctColors[index]);
 }
 
-int tcs3200::closestColorIndex(int distinctRGB[][3], int num_of_colors)
+int tcs3200::closestColorIndex(int distinctRGB[][3], int num_of_colors, int scaling)
 {
 	int index = -1; // return -1 if no declared color matches color sensor is reading
 	int biggestDifference = 765;
 	int r, g, b;
 
-	r = colorRead('r');
-	g = colorRead('g');
-	b = colorRead('b');
+	r = colorRead('r', scaling);
+	g = colorRead('g', scaling);
+	b = colorRead('b', scaling);
 
 	for (int i = 0; i < num_of_colors; i++)
 	{
@@ -154,7 +154,7 @@ int tcs3200::colorMax()
 		return 3; // Returns 3 if all of the colors have the same value
 
 	else
-		return 4; // Returns 4 if none of the statments above are fulfilled
+		return 4; // Returns 4 if none of the statements above are fulfilled
 }
 
 int tcs3200::colorMin()
@@ -180,4 +180,13 @@ int tcs3200::colorMin()
 
 	else
 		return 4; // Returns 4 if none of the statments above are fulfilled
+}
+
+RGB tcs3200::colorReadRGB(int scaling) 
+{
+	RGB rgb;
+	rgb.r = colorRead('r', scaling);
+	rgb.g = colorRead('g', scaling);
+	rgb.b = colorRead('b', scaling);
+	return rgb;
 }

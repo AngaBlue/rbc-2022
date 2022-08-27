@@ -10,6 +10,12 @@
 
 #include <Arduino.h>
 
+typedef struct RGB {
+	uint8_t r;
+	uint8_t g;
+	uint8_t b;
+} RGB;
+
 class tcs3200
 {
 public:
@@ -19,7 +25,8 @@ public:
 	int closestColor(int distinctRGB[][3], int distinctColors[], int num_of_colors);
 	int colorMax(void);
 	int colorMin(void);
-	int closestColorIndex(int distinctRGB[][3], int num_of_colors);
+	int closestColorIndex(int distinctRGB[][3], int num_of_colors, int scaling = 20);
+	RGB colorReadRGB(int scaling);
 
 
 private:
