@@ -150,7 +150,7 @@ float getSpeedFactorFromDistance(Colour newColour, int distance, Side sensorLoca
     // Max speed for the motors to turn
     const int MAX_SPEED_SCALE = 1;
     // Set min speed to half - will have to tweak later
-    const int MIN_SPEED_SCALE = 0.5;
+    const int MIN_SPEED_SCALE = 0.75;
 
     // Assume always transitioning from WHITE
     const int WHITE_INDEX = (int)Colour::WHITE;
