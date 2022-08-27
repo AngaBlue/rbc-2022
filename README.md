@@ -6,8 +6,8 @@ This repository is for Bazinga! Engineers' entry into Monash's 2022 Robot Buildi
 
 ### Colour Sensors
 
-| ---------- | --------------------------------------------------------- |
 | Pin Number | Assignment                                                |
+| ---------- | --------------------------------------------------------- |
 | 0          | Reserved                                                  |
 | 1          | Reserved                                                  |
 | 2          | **Ultrasonic**                                            |
@@ -25,8 +25,8 @@ This repository is for Bazinga! Engineers' entry into Monash's 2022 Robot Buildi
 
 ### Ultrasonic
 
-| ---------- | --------------------------------------------------------- |
 | Pin Number | Assignment                                                |
+| ---------- | --------------------------------------------------------- |
 | 0          | Reserved                                                  |
 | 1          | Reserved                                                  |
 | 2          | <div style="color:lightblue"> Trigger</div>               |
@@ -44,8 +44,8 @@ This repository is for Bazinga! Engineers' entry into Monash's 2022 Robot Buildi
 
 ### Motors
 
-| ----------- | ------------------------------------------------------- |
 | Pin Number  | Assignment                                              |
+| ----------- | ------------------------------------------------------- |
 | A0          | Unused                                                  |
 | A1          | Unused                                                  |
 | A2          | Unused                                                  |
