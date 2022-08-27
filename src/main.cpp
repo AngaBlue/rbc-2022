@@ -33,34 +33,20 @@ int RGBColors[COLOR_COUNT][3] = {
     {255, 255, 255} // White
 };
 
-char ColorNames[COLOR_COUNT] = {
-    'R', // Red
-    'G', // Green
-    'K', // Black
-    'Y', // Yellow
-    'W'  // White
+String ColorNames[COLOR_COUNT] = {
+    "R", // Red
+    "G", // Green
+    "K", // Black
+    "Y", // Yellow
+    "W"  // White
 };
 
 uint8_t R, G, B;
 
 void setup() {
-  // Colour Sensor Control
-  pinMode(S0, OUTPUT);
-  pinMode(S1, OUTPUT);
-  pinMode(S2, OUTPUT);
-  pinMode(S3, OUTPUT);
-  
-  // Colour Sensor Readout
-  pinMode(C_OUT_0, INPUT);
-  pinMode(C_OUT_1, INPUT);
-
-  // Ultrasonic Sensor Control
-  pinMode(UT, OUTPUT);
-
-  // Ultrasonic Sensor Readout
-  pinMode(UOut, INPUT);
+    Serial.begin(9600);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+    Serial.println(TCS_0.closestColor(RGBColors, ColorNames, COLOR_COUNT));
 }
