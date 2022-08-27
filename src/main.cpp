@@ -17,7 +17,21 @@
 
 
 void setup() {
-  // put your setup code here, to run once:
+  // Colour Sensor Control
+  pinMode(S0, OUTPUT);
+  pinMode(S1, OUTPUT);
+  pinMode(S2, OUTPUT);
+  pinMode(S3, OUTPUT);
+  
+  // Colour Sensor Readout
+  pinMode(COut1, INPUT);
+  pinMode(COut2, INPUT);
+
+  // Ultrasonic Sensor Control
+  pinMode(UT, OUTPUT);
+
+  // Ultrasonic Sensor Readout
+  pinMode(UOut, INPUT);
 }
 
 void loop() {
