@@ -96,7 +96,7 @@ int tcs3200::colorRead(char color, int scaling)
 	}
 }
 
-int tcs3200::closestColorIndex(int distinctRGB[][3], int num_of_colors, int scaling, int const *distance)
+int tcs3200::closestColorIndex(int distinctRGB[][3], int num_of_colors, int scaling, int const *returnDistance)
 {
 	int index = -1; // return -1 if no declared color matches color sensor is reading
 	int smallestDistance = 765;
@@ -115,6 +115,10 @@ int tcs3200::closestColorIndex(int distinctRGB[][3], int num_of_colors, int scal
 			smallestDistance = distance;
 		}
 	}
+
+	// returnDistance is the Pythagorean distance to the colour we have the index of
+	// Maybe return a struct if we're not tooooo picky about memory usage
+	(*returnDistance) = smallestDistance;
 	return index;
 }
 
