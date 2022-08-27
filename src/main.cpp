@@ -34,16 +34,27 @@ tcs3200 TCS_LEFT(S0, S1, S2, S3, C_OUT_LEFT);
 tcs3200 TCS_RIGHT(S0, S1, S2, S3, C_OUT_RIGHT);
 
 // Define the colours using an enum
-enum Color {
-    RED,
+enum Color
+{
     GREEN,
-    BLACK,
     YELLOW,
+    RED,
+    BLACK,
     WHITE
 };
 
+// Colour defines
+int RGBColors[COLOR_COUNT][3] = {
+    {6, 9, 10},   // Green
+    {35, 23, 14}, // Yellow
+    {25, 7, 9}, // Red
+    {5, 4, 5},   // Black
+    {52, 47, 60} // White
+};
+
 // Define directions
-enum Direction {
+enum Direction
+{
     LEFT,
     RIGHT,
     FORWARD,
@@ -51,97 +62,95 @@ enum Direction {
     STOP
 };
 
-String colourNameFromEnum(Color input) {
-    switch (input) {
-        case RED:
-            return "RED";
-        case GREEN:
-            return "GREEN";
-        case BLACK:
-            return "BLACK";
-        case YELLOW:
-            return "YELLOW";
-        case WHITE:
-            return "WHITE";
-        default:
-            return "UNKNOWN";
+String colourNameFromEnum(Color input)
+{
+    switch (input)
+    {
+    case RED:
+        return "RED";
+    case GREEN:
+        return "GREEN";
+    case BLACK:
+        return "BLACK";
+    case YELLOW:
+        return "YELLOW";
+    case WHITE:
+        return "WHITE";
+    default:
+        return "UNKNOWN";
     }
 }
 
-String directionNameFromEnum(Direction direction) {
-    switch (direction) {
-        case LEFT:
-            return "LEFT";
-        case RIGHT:
-            return "RIGHT";
-        case FORWARD:
-            return "FORWARD";
-        case BACKWARD:
-            return "BACKWARD";
-        case STOP:
-            return "STOP";
-        default:
-            return "UNKNOWN";
+String directionNameFromEnum(Direction direction)
+{
+    switch (direction)
+    {
+    case LEFT:
+        return "LEFT";
+    case RIGHT:
+        return "RIGHT";
+    case FORWARD:
+        return "FORWARD";
+    case BACKWARD:
+        return "BACKWARD";
+    case STOP:
+        return "STOP";
+    default:
+        return "UNKNOWN";
     }
 }
 
-void move(Direction direction) {
+void move(Direction direction)
+{
     Serial.println("Moving " + directionNameFromEnum(direction));
 
-    switch (direction) {
-        case LEFT:
-            digitalWrite(LEFT_ENA, HIGH);
-            digitalWrite(RIGHT_ENA, HIGH);
-            digitalWrite(LEFT_IN1, LOW);
-            digitalWrite(LEFT_IN2, HIGH);
-            digitalWrite(RIGHT_IN1, HIGH);
-            digitalWrite(RIGHT_IN2, LOW);
-            break;
-        case RIGHT:
-            digitalWrite(LEFT_ENA, HIGH);
-            digitalWrite(RIGHT_ENA, HIGH);
-            digitalWrite(LEFT_IN1, HIGH);
-            digitalWrite(LEFT_IN2, LOW);
-            digitalWrite(RIGHT_IN1, LOW);
-            digitalWrite(RIGHT_IN2, HIGH);
-            break;
-        case FORWARD:
-            digitalWrite(LEFT_ENA, HIGH);
-            digitalWrite(RIGHT_ENA, HIGH);
-            digitalWrite(LEFT_IN1, HIGH);
-            digitalWrite(LEFT_IN2, LOW);
-            digitalWrite(RIGHT_IN1, HIGH);
-            digitalWrite(RIGHT_IN2, LOW);
-            break;
-        case BACKWARD:
-            digitalWrite(LEFT_ENA, HIGH);
-            digitalWrite(RIGHT_ENA, HIGH);
-            digitalWrite(LEFT_IN1, LOW);
-            digitalWrite(LEFT_IN2, HIGH);
-            digitalWrite(RIGHT_IN1, LOW);
-            digitalWrite(RIGHT_IN2, HIGH);
-            break;
-        case STOP:
-            digitalWrite(LEFT_ENA, LOW);
-            digitalWrite(RIGHT_ENA, LOW);
-            digitalWrite(LEFT_IN1, LOW);
-            digitalWrite(LEFT_IN2, LOW);
-            digitalWrite(RIGHT_IN1, LOW);
-            digitalWrite(RIGHT_IN2, LOW);
-            break;
+    switch (direction)
+    {
+    case LEFT:
+        digitalWrite(LEFT_ENA, HIGH);
+        digitalWrite(RIGHT_ENA, HIGH);
+        digitalWrite(LEFT_IN1, LOW);
+        digitalWrite(LEFT_IN2, HIGH);
+        digitalWrite(RIGHT_IN1, HIGH);
+        digitalWrite(RIGHT_IN2, LOW);
+        break;
+    case RIGHT:
+        digitalWrite(LEFT_ENA, HIGH);
+        digitalWrite(RIGHT_ENA, HIGH);
+        digitalWrite(LEFT_IN1, HIGH);
+        digitalWrite(LEFT_IN2, LOW);
+        digitalWrite(RIGHT_IN1, LOW);
+        digitalWrite(RIGHT_IN2, HIGH);
+        break;
+    case FORWARD:
+        digitalWrite(LEFT_ENA, HIGH);
+        digitalWrite(RIGHT_ENA, HIGH);
+        digitalWrite(LEFT_IN1, HIGH);
+        digitalWrite(LEFT_IN2, LOW);
+        digitalWrite(RIGHT_IN1, HIGH);
+        digitalWrite(RIGHT_IN2, LOW);
+        break;
+    case BACKWARD:
+        digitalWrite(LEFT_ENA, HIGH);
+        digitalWrite(RIGHT_ENA, HIGH);
+        digitalWrite(LEFT_IN1, LOW);
+        digitalWrite(LEFT_IN2, HIGH);
+        digitalWrite(RIGHT_IN1, LOW);
+        digitalWrite(RIGHT_IN2, HIGH);
+        break;
+    case STOP:
+        digitalWrite(LEFT_ENA, LOW);
+        digitalWrite(RIGHT_ENA, LOW);
+        digitalWrite(LEFT_IN1, LOW);
+        digitalWrite(LEFT_IN2, LOW);
+        digitalWrite(RIGHT_IN1, LOW);
+        digitalWrite(RIGHT_IN2, LOW);
+        break;
     }
 }
 
-// Colour defines
-int RGBColors[COLOR_COUNT][3] = {
-    {25, 7, 9}, // Red
-    {6, 9, 10}, // Green
-    {5, 4, 5}, // Black
-    {35, 23, 14}, // Yellow
-    {52, 47, 60} // White
-};
-
-void setup() {
+void setup()
+{
     Serial.begin(9600);
 
     pinMode(A0, OUTPUT);
@@ -150,10 +159,10 @@ void setup() {
     pinMode(A3, OUTPUT);
     pinMode(A4, OUTPUT);
     pinMode(A5, OUTPUT);
-
 }
 
-void loop() {
+void loop()
+{
     // Read both color sensors
     Color c_left = (Color)TCS_LEFT.closestColorIndex(RGBColors, COLOR_COUNT);
     Color c_right = (Color)TCS_RIGHT.closestColorIndex(RGBColors, COLOR_COUNT);
@@ -161,13 +170,18 @@ void loop() {
     // Print the color values
     Serial.println("Left: " + colourNameFromEnum(c_left) + " Right: " + colourNameFromEnum(c_right));
 
-    // Find direction 
+    // Find direction
     Direction direction = FORWARD;
-    if (c_left == BLACK && c_right == WHITE) {
+    if (c_left == BLACK && c_right == WHITE)
+    {
         direction = LEFT;
-    } else if (c_left == WHITE && c_right == BLACK) {
+    }
+    else if (c_left == WHITE && c_right == BLACK)
+    {
         direction = RIGHT;
-    } else if (c_left == WHITE && c_right == WHITE) {
+    }
+    else if (c_left == WHITE && c_right == WHITE)
+    {
         direction = FORWARD;
     }
 
