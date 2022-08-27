@@ -9,11 +9,17 @@
 #define S2 7
 #define S3 6
 
-// Colour Sensor Out
+// Colour Sensor Output
 #define COut1 13
 #define COut2 12
 
+// Ultrasonic Sensor Control
+#define UT 2
+
+// Ultrasonic Output
 #define UOut 3
+
+
 
 // Colour defines
 int RGBColors[COLOR_COUNT][3] = {
