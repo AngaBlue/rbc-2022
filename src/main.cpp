@@ -95,30 +95,32 @@ void move(Direction direction, float left_multiplier = 1, float right_multiplier
 
     switch (direction)
     {
-    case Direction::LEFT:
-        analogWrite(LEFT_ENA, LOW);
-        analogWrite(RIGHT_ENA, SPEED RIGHT_MOTOR_OFFSET TURN_OFFSET * right_multiplier);
-        break;
-    case Direction::RIGHT:
-        analogWrite(LEFT_ENA, SPEED TURN_OFFSET * left_multiplier);
-        analogWrite(RIGHT_ENA, LOW);
-        break;
-    case Direction::FORWARD:
-        analogWrite(LEFT_ENA, SPEED * left_multiplier);
-        analogWrite(RIGHT_ENA, SPEED RIGHT_MOTOR_OFFSET * right_multiplier);
-        break;
-    case Direction::BACKWARD:
-        analogWrite(LEFT_ENA, SPEED * left_multiplier);
-        analogWrite(RIGHT_ENA, SPEED RIGHT_MOTOR_OFFSET * right_multiplier);
-        digitalWrite(LEFT_IN1, LOW);
-        digitalWrite(LEFT_IN2, HIGH);
-        digitalWrite(RIGHT_IN1, LOW);
-        digitalWrite(RIGHT_IN2, HIGH);
-        break;
-    case Direction::STOP:
-        analogWrite(LEFT_ENA, LOW);
-        analogWrite(RIGHT_ENA, LOW);
-        break;
+        // No multiplier for the left/right turning radius as if it's the 
+        // "closest" colour then we should probably drive it full-speed
+        case Direction::LEFT:
+            analogWrite(LEFT_ENA, LOW);
+            analogWrite(RIGHT_ENA, SPEED RIGHT_MOTOR_OFFSET TURN_OFFSET);
+            break;
+        case Direction::RIGHT:
+            analogWrite(LEFT_ENA, SPEED TURN_OFFSET);
+            analogWrite(RIGHT_ENA, LOW);
+            break;
+        case Direction::FORWARD:
+            analogWrite(LEFT_ENA, SPEED * left_multiplier);
+            analogWrite(RIGHT_ENA, SPEED RIGHT_MOTOR_OFFSET * right_multiplier);
+            break;
+        case Direction::BACKWARD:
+            analogWrite(LEFT_ENA, SPEED * left_multiplier);
+            analogWrite(RIGHT_ENA, SPEED RIGHT_MOTOR_OFFSET * right_multiplier);
+            digitalWrite(LEFT_IN1, LOW);
+            digitalWrite(LEFT_IN2, HIGH);
+            digitalWrite(RIGHT_IN1, LOW);
+            digitalWrite(RIGHT_IN2, HIGH);
+            break;
+        case Direction::STOP:
+            analogWrite(LEFT_ENA, LOW);
+            analogWrite(RIGHT_ENA, LOW);
+            break;
     }
 }
 
@@ -132,14 +134,14 @@ float getSpeedFactorFromDistance(Colour newColour, int distance, Side sensorLoca
      * always going to 11.
      *
      * Maximum distance between white and an arbitrary colour is 53.2 (W->Y,
-     * left sensor) or 81.8 (W-Y, right sensor). I'm using 65 as a fallback 
+     * left sensor) or 81.8 (W-Y, right sensor). I'm using 65 as a fallback
      * value in case something in the code is broken.
-     * 
-     * If the value is larger than that... the good way would be to calculate 
-     * maximums for all possible colour transitions. I'll do this each call 
-     * instead of as a LUT because I'm lazy - could definitely use a macro or 
+     *
+     * If the value is larger than that... the good way would be to calculate
+     * maximums for all possible colour transitions. I'll do this each call
+     * instead of as a LUT because I'm lazy - could definitely use a macro or
      * something to do it at compile-time but this is hopefully fast enough.
-     * 
+     *
      * Does the Arduino have accelerated division..?
      */
 
@@ -151,29 +153,29 @@ float getSpeedFactorFromDistance(Colour newColour, int distance, Side sensorLoca
     const int MIN_SPEED_SCALE = 0.5;
 
     // Assume always transitioning from WHITE
-    const int WHITE_INDEX = (int)Colour::WHITE;    
-    
+    const int WHITE_INDEX = (int)Colour::WHITE;
+
     // Find the maximum value differences for each colour (assumed white start)
     int diffR, diffG, diffB;
     switch (sensorLocation)
     {
-        case Side::LEFT:
-            diffR = RGBColorsLeft[colourIndex][0] - RGBColorsLeft[WHITE_INDEX][0];
-            diffG = RGBColorsLeft[colourIndex][1] - RGBColorsLeft[WHITE_INDEX][1];
-            diffB = RGBColorsLeft[colourIndex][2] - RGBColorsLeft[WHITE_INDEX][2];
-            break;
+    case Side::LEFT:
+        diffR = RGBColorsLeft[colourIndex][0] - RGBColorsLeft[WHITE_INDEX][0];
+        diffG = RGBColorsLeft[colourIndex][1] - RGBColorsLeft[WHITE_INDEX][1];
+        diffB = RGBColorsLeft[colourIndex][2] - RGBColorsLeft[WHITE_INDEX][2];
+        break;
 
-        case Side::RIGHT:
-            diffR = RGBColorsRight[colourIndex][0] - RGBColorsRight[WHITE_INDEX][0];
-            diffG = RGBColorsRight[colourIndex][1] - RGBColorsRight[WHITE_INDEX][1];
-            diffB = RGBColorsRight[colourIndex][2] - RGBColorsRight[WHITE_INDEX][2];
-            break;
+    case Side::RIGHT:
+        diffR = RGBColorsRight[colourIndex][0] - RGBColorsRight[WHITE_INDEX][0];
+        diffG = RGBColorsRight[colourIndex][1] - RGBColorsRight[WHITE_INDEX][1];
+        diffB = RGBColorsRight[colourIndex][2] - RGBColorsRight[WHITE_INDEX][2];
+        break;
 
-        case Side::UNBIASED:
-            // This shouldn't happen.
-            diffR = diffG = diffB = 65;
-            Serial.println("Invalid side input to turn power calculator.");
-            break;
+    case Side::UNBIASED:
+        // This shouldn't happen.
+        diffR = diffG = diffB = 65;
+        Serial.println("Invalid side input to turn power calculator.");
+        break;
     }
 
     // Same algorithm used in the library
@@ -220,9 +222,8 @@ void loop()
     // If unbiased or left side, and non-white colour, track that path
     if (c_left != Colour::WHITE && state.side != Side::RIGHT)
     {
-        state.side = c_right == Colour::BLACK ? Side::LEFT :
-            Side::UNBIASED;
-            state.colour = c_left;
+        state.side = c_right == Colour::BLACK ? Side::LEFT : Side::UNBIASED;
+        state.colour = c_left;
     }
 
     // If unbiased or right side, and non-white colour, track that path
