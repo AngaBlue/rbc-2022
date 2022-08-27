@@ -48,5 +48,9 @@ void setup() {
 }
 
 void loop() {
+    R = TCS_0.colorRead('r');
+    G = TCS_0.colorRead('g');
+    B = TCS_0.colorRead('b');
+    Serial.println("R" + String(R) + " G" + String(G) + " B" + String(B));
     Serial.println(TCS_0.closestColor(RGBColors, ColorNames, COLOR_COUNT));
 }
