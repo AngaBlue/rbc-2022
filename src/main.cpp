@@ -141,14 +141,6 @@ int RGBColors[COLOR_COUNT][3] = {
     {52, 47, 60} // White
 };
 
-String ColorNames[COLOR_COUNT] = {
-    "R", // Red
-    "G", // Green
-    "K", // Black
-    "Y", // Yellow
-    "W"  // White
-};
-
 void setup() {
     Serial.begin(9600);
 
