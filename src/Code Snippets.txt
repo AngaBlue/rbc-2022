@@ -1,0 +1,54 @@
+#define arrSize 4
+#define S0 7
+#define S1 6
+#define S2 4
+#define S3 5
+#define interruptPin 3
+
+unsigned long timeNow[arrSize];
+int count = 0;
+volatile bool flag = false;
+
+void setup() {
+  pinMode(S0, OUTPUT);
+  pinMode(S1, OUTPUT);
+  pinMode(S2, OUTPUT);
+  pinMode(S3, OUTPUT);
+  pinMode(interruptPin, INPUT);
+
+  digitalWrite(S0,HIGH);
+  digitalWrite(S1,LOW);
+
+  digitalWrite(S2,LOW);
+  digitalWrite(S3,LOW);
+  
+  Serial.begin(115200);
+  attachInterrupt(digitalPinToInterrupt(interruptPin), interruptRoutine, CHANGE);
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  if (flag){
+    for (int i = 1; i < arrSize; i++){
+      Serial.print(timeNow[i]-timeNow[i-1]);
+      Serial.print("\n");
+    }
+    count = 0;
+    flag = 0;
+    interrupts();
+  }
+}
+
+void interruptRoutine(){
+  if (count == arrSize){
+    noInterrupts();
+    for (int i = 1; i < arrSize; i++){
+      
+    }
+    flag = 1;
+  } else{
+    timeNow[count] = micros();
+    count++;
+  }
+}
+
