@@ -68,6 +68,23 @@ String colourNameFromEnum(Color input) {
     }
 }
 
+String directionNameFromEnum(Direction direction) {
+    switch (direction) {
+        case LEFT:
+            return "LEFT";
+        case RIGHT:
+            return "RIGHT";
+        case FORWARD:
+            return "FORWARD";
+        case BACKWARD:
+            return "BACKWARD";
+        case STOP:
+            return "STOP";
+        default:
+            return "UNKNOWN";
+    }
+}
+
 // Colour defines
 int RGBColors[COLOR_COUNT][3] = {
     {25, 7, 9}, // Red
@@ -109,5 +126,54 @@ void loop() {
         digitalWrite(RIGHT_IN1, HIGH);
         digitalWrite(RIGHT_IN2, LOW);
     } (RIGHT_IN2, HIGH);
+}
+
+void move(Direction direction) {
+    Serial.println("Moving " + directionNameFromEnum(direction));
+
+    switch (direction) {
+        case LEFT:
+            analogWrite(LEFT_ENA, 255);
+            analogWrite(RIGHT_ENA, 255);
+            digitalWrite(LEFT_IN1, LOW);
+            digitalWrite(LEFT_IN2, HIGH);
+            digitalWrite(RIGHT_IN1, HIGH);
+            digitalWrite(RIGHT_IN2, LOW);
+            break;
+        case RIGHT:
+            analogWrite(LEFT_ENA, 255);
+            analogWrite(RIGHT_ENA, 255);
+            digitalWrite(LEFT_IN1, HIGH);
+            digitalWrite(LEFT_IN2, LOW);
+            digitalWrite(RIGHT_IN1, LOW);
+            digitalWrite(RIGHT_IN2, HIGH);
+            break;
+        case FORWARD:
+            analogWrite(LEFT_ENA, 255);
+            analogWrite(RIGHT_ENA, 255);
+            digitalWrite(LEFT_IN1, HIGH);
+            digitalWrite(LEFT_IN2, LOW);
+            digitalWrite(RIGHT_IN1, HIGH);
+            digitalWrite(RIGHT_IN2, LOW);
+            break;
+        case BACKWARD:
+            analogWrite(LEFT_ENA, 255);
+            analogWrite(RIGHT_ENA, 255);
+            digitalWrite(LEFT_IN1, LOW);
+            digitalWrite(LEFT_IN2, HIGH);
+            digitalWrite(RIGHT_IN1, LOW);
+            digitalWrite(RIGHT_IN2, HIGH);
+            break;
+        case STOP:
+            analogWrite(LEFT_ENA, 0);
+            analogWrite(RIGHT_ENA, 0);
+            digitalWrite(LEFT_IN1, LOW);
+            digitalWrite(LEFT_IN2, LOW);
+            digitalWrite(RIGHT_IN1, LOW);
+            digitalWrite(RIGHT_IN2, LOW);
+            break;
+        default:
+            Serial.println("Unknown direction");
+            break;
     }
 }
