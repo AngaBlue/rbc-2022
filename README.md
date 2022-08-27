@@ -46,9 +46,9 @@ This repository is for Bazinga! Engineers' entry into Monash's 2022 Robot Buildi
 
 | Pin Number  | Assignment                                              |
 | ----------- | ------------------------------------------------------- |
-| A0          | Unused                                                  |
-| A1          | Unused                                                  |
-| A2          | Unused                                                  |
-| A3          | Unused                                                  |
-| A4          | Unused                                                  |
-| A5          | Unused                                                  |
+| A0          | <div style="color:lightblue">LEFT_ENA</div>             |
+| A1          | <div style="color:lightblue">LEFT_IN1</div>             |
+| A2          | <div style="color:lightblue">LEFT_IN2</div>             |
+| A3          | <div style="color:lightblue">RIGHT_ENA</div>            |
+| A4          | <div style="color:lightblue">RIGHT_IN1</div>            |
+| A5          | <div style="color:lightblue">RIGHT_IN2</div>            |
