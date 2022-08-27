@@ -1,6 +1,7 @@
 #include <Arduino.h>
-#include "includes/tcs3200.h"
 #include <stdint.h>
+#include "libs/tcs3200.h"
+#include "util.h"
 
 #define COLOR_COUNT 5
 
@@ -18,7 +19,7 @@
 #define UT 2
 
 // Ultrasonic Output
-#define UOut 3
+#define U_OUT 3
 
 // Motor Control
 #define LEFT_ENA A0
@@ -33,16 +34,6 @@
 tcs3200 TCS_LEFT(S0, S1, S2, S3, C_OUT_LEFT);
 tcs3200 TCS_RIGHT(S0, S1, S2, S3, C_OUT_RIGHT);
 
-// Define the colours using an enum
-enum Color
-{
-    GREEN,
-    YELLOW,
-    RED,
-    BLACK,
-    WHITE
-};
-
 // Colour defines
 int RGBColors[COLOR_COUNT][3] = {
     {6, 9, 10},   // Green
@@ -51,54 +42,6 @@ int RGBColors[COLOR_COUNT][3] = {
     {5, 4, 5},   // Black
     {52, 47, 60} // White
 };
-
-// Define directions
-enum Direction
-{
-    LEFT,
-    RIGHT,
-    FORWARD,
-    BACKWARD,
-    STOP
-};
-
-String colourNameFromEnum(Color input)
-{
-    switch (input)
-    {
-    case RED:
-        return "RED";
-    case GREEN:
-        return "GREEN";
-    case BLACK:
-        return "BLACK";
-    case YELLOW:
-        return "YELLOW";
-    case WHITE:
-        return "WHITE";
-    default:
-        return "UNKNOWN";
-    }
-}
-
-String directionNameFromEnum(Direction direction)
-{
-    switch (direction)
-    {
-    case LEFT:
-        return "LEFT";
-    case RIGHT:
-        return "RIGHT";
-    case FORWARD:
-        return "FORWARD";
-    case BACKWARD:
-        return "BACKWARD";
-    case STOP:
-        return "STOP";
-    default:
-        return "UNKNOWN";
-    }
-}
 
 void move(Direction direction)
 {
@@ -164,8 +107,8 @@ void setup()
 void loop()
 {
     // Read both color sensors
-    Color c_left = (Color)TCS_LEFT.closestColorIndex(RGBColors, COLOR_COUNT);
-    Color c_right = (Color)TCS_RIGHT.closestColorIndex(RGBColors, COLOR_COUNT);
+    Colour c_left = (Colour)TCS_LEFT.closestColorIndex(RGBColors, COLOR_COUNT);
+    Colour c_right = (Colour)TCS_RIGHT.closestColorIndex(RGBColors, COLOR_COUNT);
 
     // Print the color values
     Serial.println("Left: " + colourNameFromEnum(c_left) + " Right: " + colourNameFromEnum(c_right));
