@@ -8,8 +8,8 @@
 #define COLOUR_COUNT 5
 #define SPEED 255
 #define SCALING 100
-#define RIGHT_MOTOR_OFFSET * 0.93
-#define TURN_OFFSET * 0.5
+#define RIGHT_MOTOR_OFFSET * 0.9
+#define TURN_OFFSET * 0.4
 #define MOVEMENT_CHECK_DELAY 0
 
 // Shared colour sensor pins
@@ -73,7 +73,7 @@ void move(Direction direction)
         analogWrite(LEFT_ENA, 255 TURN_OFFSET);
         analogWrite(RIGHT_ENA, 255 RIGHT_MOTOR_OFFSET TURN_OFFSET);
         digitalWrite(LEFT_IN1, LOW);
-        digitalWrite(LEFT_IN2, HIGH);
+        digitalWrite(LEFT_IN2, LOW);
         digitalWrite(RIGHT_IN1, HIGH);
         digitalWrite(RIGHT_IN2, LOW);
         break;
@@ -83,7 +83,7 @@ void move(Direction direction)
         digitalWrite(LEFT_IN1, HIGH);
         digitalWrite(LEFT_IN2, LOW);
         digitalWrite(RIGHT_IN1, LOW);
-        digitalWrite(RIGHT_IN2, HIGH);
+        digitalWrite(RIGHT_IN2, LOW);
         break;
     case FORWARD:
         analogWrite(LEFT_ENA, SPEED);
@@ -102,8 +102,8 @@ void move(Direction direction)
         digitalWrite(RIGHT_IN2, HIGH);
         break;
     case SLOW:
-        analogWrite(LEFT_ENA, SPEED / 8);
-        analogWrite(RIGHT_ENA, (SPEED RIGHT_MOTOR_OFFSET) / 8);
+        analogWrite(LEFT_ENA, SPEED / 10);
+        analogWrite(RIGHT_ENA, (SPEED RIGHT_MOTOR_OFFSET) / 10);
         digitalWrite(LEFT_IN1, HIGH);
         digitalWrite(LEFT_IN2, LOW);
         digitalWrite(RIGHT_IN1, HIGH);
@@ -162,9 +162,11 @@ void loop()
 
     // Move the robot
     move(direction);
-    if (direction != FORWARD) delay(MOVEMENT_CHECK_DELAY);
+    if (direction != FORWARD) {
+        // delay(MOVEMENT_CHECK_DELAY);
+    }
     else {
-        delay(MOVEMENT_CHECK_DELAY);
+        // delay(MOVEMENT_CHECK_DELAY);
         move(SLOW);
         delay(MOVEMENT_CHECK_DELAY);
     }
