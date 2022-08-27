@@ -12,7 +12,6 @@ enum class Direction
     RIGHT,
     FORWARD,
     BACKWARD,
-    SLOW,
     STOP
 };
 
