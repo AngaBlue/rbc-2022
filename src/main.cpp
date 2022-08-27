@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <tcs3200.h>
+#include <stdint.h>
 
 #define COLOR_COUNT 5
 
@@ -39,6 +40,8 @@ char ColorNames[COLOR_COUNT] = {
     'Y', // Yellow
     'W'  // White
 };
+
+uint8_t R, G, B;
 
 void setup() {
   // Colour Sensor Control
