@@ -48,8 +48,8 @@ void setup() {
   pinMode(S3, OUTPUT);
   
   // Colour Sensor Readout
-  pinMode(COut1, INPUT);
-  pinMode(COut2, INPUT);
+  pinMode(C_OUT_0, INPUT);
+  pinMode(C_OUT_1, INPUT);
 
   // Ultrasonic Sensor Control
   pinMode(UT, OUTPUT);
