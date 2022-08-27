@@ -10,8 +10,9 @@
 #define COut1 13
 #define COut2 12
 
-// Ultrasonc
-
+// Ultrasonic
+#define UT 2
+#define UOut 3
 
 
 void setup() {
