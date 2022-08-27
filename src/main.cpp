@@ -8,6 +8,8 @@
 #define COLOUR_COUNT 5
 #define SPEED 120
 #define SCALING 100
+#define RIGHT_MOTOR_OFFSET * 0.85
+#define MOVEMENT_CHECK_DELAY 0
 
 // Shared colour sensor pins
 #define S0 11
@@ -67,16 +69,16 @@ void move(Direction direction)
     switch (direction)
     {
     case LEFT:
-        analogWrite(LEFT_ENA, SPEED);
-        analogWrite(RIGHT_ENA, SPEED);
+        analogWrite(LEFT_ENA, 255);
+        analogWrite(RIGHT_ENA, 255 RIGHT_MOTOR_OFFSET);
         digitalWrite(LEFT_IN1, LOW);
         digitalWrite(LEFT_IN2, HIGH);
         digitalWrite(RIGHT_IN1, HIGH);
         digitalWrite(RIGHT_IN2, LOW);
         break;
     case RIGHT:
-        analogWrite(LEFT_ENA, SPEED);
-        analogWrite(RIGHT_ENA, SPEED);
+        analogWrite(LEFT_ENA, 255);
+        analogWrite(RIGHT_ENA, 255 RIGHT_MOTOR_OFFSET);
         digitalWrite(LEFT_IN1, HIGH);
         digitalWrite(LEFT_IN2, LOW);
         digitalWrite(RIGHT_IN1, LOW);
@@ -84,7 +86,7 @@ void move(Direction direction)
         break;
     case FORWARD:
         analogWrite(LEFT_ENA, SPEED);
-        analogWrite(RIGHT_ENA, SPEED);
+        analogWrite(RIGHT_ENA, SPEED RIGHT_MOTOR_OFFSET);
         digitalWrite(LEFT_IN1, HIGH);
         digitalWrite(LEFT_IN2, LOW);
         digitalWrite(RIGHT_IN1, HIGH);
@@ -92,7 +94,7 @@ void move(Direction direction)
         break;
     case BACKWARD:
         analogWrite(LEFT_ENA, SPEED);
-        analogWrite(RIGHT_ENA, SPEED);
+        analogWrite(RIGHT_ENA, SPEED RIGHT_MOTOR_OFFSET);
         digitalWrite(LEFT_IN1, LOW);
         digitalWrite(LEFT_IN2, HIGH);
         digitalWrite(RIGHT_IN1, LOW);
@@ -100,7 +102,7 @@ void move(Direction direction)
         break;
     case STOP:
         analogWrite(LEFT_ENA, SPEED);
-        analogWrite(RIGHT_ENA, SPEED);
+        analogWrite(RIGHT_ENA, SPEED RIGHT_MOTOR_OFFSET);
         digitalWrite(LEFT_IN1, LOW);
         digitalWrite(LEFT_IN2, LOW);
         digitalWrite(RIGHT_IN1, LOW);
@@ -151,6 +153,5 @@ void loop()
 
     // Move the robot
     move(direction);
-
-    delay(1000);
+    if (direction != FORWARD) delay(MOVEMENT_CHECK_DELAY);
 }
