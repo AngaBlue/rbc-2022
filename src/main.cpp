@@ -10,10 +10,14 @@
 #define S3 6
 
 // Colour Sensor Out
-#define COut1 13
-#define COut2 12
+#define C_OUT_0 13
+#define C_OUT_1 12
 
 #define UOut 3
+
+// Sensors
+tcs3200 TCS_0(S0, S1, S2, S3, C_OUT_0);
+tcs3200 TCS_1(S0, S1, S2, S3, C_OUT_1);
 
 // Colour defines
 int RGBColors[COLOR_COUNT][3] = {
