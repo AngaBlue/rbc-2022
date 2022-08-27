@@ -101,6 +101,14 @@ void move(Direction direction)
         digitalWrite(RIGHT_IN1, LOW);
         digitalWrite(RIGHT_IN2, HIGH);
         break;
+    case SLOW:
+        analogWrite(LEFT_ENA, SPEED / 8);
+        analogWrite(RIGHT_ENA, (SPEED RIGHT_MOTOR_OFFSET) / 8);
+        digitalWrite(LEFT_IN1, HIGH);
+        digitalWrite(LEFT_IN2, LOW);
+        digitalWrite(RIGHT_IN1, HIGH);
+        digitalWrite(RIGHT_IN2, LOW);
+        break;
     case STOP:
         analogWrite(LEFT_ENA, SPEED);
         analogWrite(RIGHT_ENA, SPEED RIGHT_MOTOR_OFFSET);
@@ -157,7 +165,7 @@ void loop()
     if (direction != FORWARD) delay(MOVEMENT_CHECK_DELAY);
     else {
         delay(MOVEMENT_CHECK_DELAY);
-        move(STOP);
+        move(SLOW);
         delay(MOVEMENT_CHECK_DELAY);
     }
 }

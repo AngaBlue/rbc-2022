@@ -12,6 +12,7 @@ enum Direction
     RIGHT,
     FORWARD,
     BACKWARD,
+    SLOW,
     STOP
 };
 
