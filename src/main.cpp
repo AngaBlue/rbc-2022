@@ -20,6 +20,15 @@
 // Ultrasonic Output
 #define UOut 3
 
+// Motor Control
+#define LEFT_ENA A0
+#define LEFT_IN1 A1
+#define LEFT_IN2 A2
+
+#define RIGHT_ENA A3
+#define RIGHT_IN1 A4
+#define RIGHT_IN2 A5
+
 // Sensors
 tcs3200 TCS_LEFT(S0, S1, S2, S3, C_OUT_LEFT);
 tcs3200 TCS_RIGHT(S0, S1, S2, S3, C_OUT_RIGHT);
@@ -31,6 +40,15 @@ enum Color {
     BLACK,
     YELLOW,
     WHITE
+};
+
+// Define directions
+enum Direction {
+    LEFT,
+    RIGHT,
+    FORWARD,
+    BACKWARD,
+    STOP
 };
 
 String colourNameFromEnum(Color input) {
@@ -73,9 +91,23 @@ void setup() {
 
 void loop() {
     // Read both color sensors
-    auto c_left = TCS_LEFT.closestColorIndex(RGBColors, COLOR_COUNT);
-    auto c_right = TCS_RIGHT.closestColorIndex(RGBColors, COLOR_COUNT);
+    Color c_left = (Color)TCS_LEFT.closestColorIndex(RGBColors, COLOR_COUNT);
+    Color c_right = (Color)TCS_RIGHT.closestColorIndex(RGBColors, COLOR_COUNT);
 
     // Print the color values
-    Serial.println("Left: " + colourNameFromEnum((Color)c_left) + " Right: " + colourNameFromEnum((Color)c_right));
+    Serial.println("Left: " + colourNameFromEnum(c_left) + " Right: " + colourNameFromEnum(c_right));
+
+    // Track 1 logic
+    if (c_left == BLACK && c_right == BLACK) {
+        // Both sensors are on black, so we are on the line
+        // Move forward
+        Serial.println("Both sensors on black, moving forward");
+        analogWrite(LEFT_ENA, 255);
+        analogWrite(RIGHT_ENA, 255);
+        digitalWrite(LEFT_IN1, HIGH);
+        digitalWrite(LEFT_IN2, LOW);
+        digitalWrite(RIGHT_IN1, HIGH);
+        digitalWrite(RIGHT_IN2, LOW);
+    } (RIGHT_IN2, HIGH);
+    }
 }
