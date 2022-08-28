@@ -236,30 +236,6 @@ void loop()
     Serial.println("Left: " + String(rgb_left.r) + " " + String(rgb_left.g) + " " + String(rgb_left.b));
     Serial.println("Right: " + String(rgb_right.r) + " " + String(rgb_right.g) + " " + String(rgb_right.b));
 
-    if (c_left_previous != c_left){
-        if (stateChangeL){
-            timeStartStateChangeL = millis();
-        } else{
-
-            timeEndStateChangeL = millis();
-            if (timeEndStateChangeL - timeStartStateChangeL <  STATE_CHANGE_THRESHOLD){
-                // Turn Left until color on left or break if color on right
-            }
-        }
-    }
-
-    if (c_right_previous != c_right){
-        if (stateChangeR){
-            timeStartStateChangeR = millis();
-        } else{
-
-            timeEndStateChangeR = millis();
-            if (timeEndStateChangeR - timeStartStateChangeR <  STATE_CHANGE_THRESHOLD){
-                // Turn Right until color on Right or break if color on Left
-            }
-        }
-    }
-
     // If unbiased or left side, and non-white colour, track that path
     if (c_left != Colour::WHITE && state.side != Side::RIGHT)
     {
@@ -285,12 +261,46 @@ void loop()
         direction = Direction::RIGHT;
     }
 
-    // Find speed multipliers
+        // Find speed multipliers
     // If the LEFT sensor is detecting a colour, drive the RIGHT one faster (likewise for flip)
     // At the moment, the sensor on WHITE will probably return a low multiplier (can fix but cbf right now)
     float right_motor_multiplier = getSpeedFactorFromDistance(c_left, dist_left, Side::LEFT);
     float left_motor_multiplier = getSpeedFactorFromDistance(c_right, dist_right, Side::RIGHT);
+    
+    // state change
+    bool moved = false;
+    if (c_left_previous == Colour::WHITE && c_left != Colour::WHITE){
+        timeStartStateChangeL = millis();
+    } else if(c_left_previous != Colour::WHITE && c_left == Colour::WHITE){
+        timeEndStateChangeL = millis();
+        if (timeEndStateChangeL - timeStartStateChangeL <  STATE_CHANGE_THRESHOLD){
+            // Turn Left until color on left or break if color on right
+            direction = Direction::LEFT;
+            move(direction, left_motor_multiplier, right_motor_multiplier);
+            moved = true; 
+            while((Colour)TCS_LEFT.closestColorIndex(RGBColorsRight, COLOUR_COUNT, SENSOR_READOUT_SCALING, &dist_left) != Colour::WHITE){
+                direction = Direction::LEFT;
+                move(direction, left_motor_multiplier, right_motor_multiplier);
+            }
+        }
+    }
+
+    if (c_right_previous == Colour::WHITE && c_right != Colour::WHITE){
+        timeStartStateChangeR = millis();            
+    } else if (c_right_previous != Colour::WHITE && c_right == Colour::WHITE){
+        if (timeEndStateChangeR - timeStartStateChangeR <  STATE_CHANGE_THRESHOLD){
+            // Turn Right until color on Right or break if color on Left
+            moved = true; 
+            while((Colour)TCS_RIGHT.closestColorIndex(RGBColorsRight, COLOUR_COUNT, SENSOR_READOUT_SCALING, &dist_right) != Colour::WHITE){
+                direction = Direction::RIGHT;
+                move(direction, left_motor_multiplier, right_motor_multiplier);
+            }
+        }
+    }
 
     // Move the robot
-    move(direction, left_motor_multiplier, right_motor_multiplier);
+    if (!moved){
+        move(direction, left_motor_multiplier, right_motor_multiplier);
+    }
+    
 }
