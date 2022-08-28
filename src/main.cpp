@@ -6,10 +6,10 @@
 
 // Number of colours to detect
 #define COLOUR_COUNT 5
-#define SPEED 160
+#define SPEED 140
 #define SENSOR_READOUT_SCALING 100
 #define RIGHT_MOTOR_OFFSET * 0.9
-#define TURN_OFFSET * 0.75
+#define TURN_OFFSET * 0.68
 #define MOVEMENT_CHECK_DELAY 0
 
 // Shared colour sensor pins
@@ -83,12 +83,16 @@ void move(Direction direction, float left_multiplier = 1, float right_multiplier
         // No multiplier for the left/right turning radius as if it's the 
         // "closest" colour then we should probably drive it full-speed
         case Direction::LEFT:
-            analogWrite(LEFT_ENA, LOW);
+            analogWrite(LEFT_ENA, SPEED TURN_OFFSET * 0.68);
+            digitalWrite(LEFT_IN1, LOW);
+            digitalWrite(LEFT_IN2, HIGH);
             analogWrite(RIGHT_ENA, SPEED RIGHT_MOTOR_OFFSET TURN_OFFSET);
             break;
         case Direction::RIGHT:
             analogWrite(LEFT_ENA, SPEED TURN_OFFSET);
-            analogWrite(RIGHT_ENA, LOW);
+            analogWrite(RIGHT_ENA, SPEED TURN_OFFSET * 0.68);
+            digitalWrite(RIGHT_IN1, LOW);
+            digitalWrite(RIGHT_IN2, HIGH);
             break;
         case Direction::FORWARD:
             analogWrite(LEFT_ENA, SPEED * left_multiplier);
@@ -211,13 +215,13 @@ void loop()
     Colour c_right = (Colour)TCS_RIGHT.closestColour(RGBColoursRight, COLOUR_COUNT, SENSOR_READOUT_SCALING, &dist_right);
 
     // Print the colour values
-    Serial.println("Left: " + colourNameFromEnum(c_left) + " Right: " + colourNameFromEnum(c_right));
+    // Serial.println("Left: " + colourNameFromEnum(c_left) + " Right: " + colourNameFromEnum(c_right));
 
     auto rgb_left = TCS_LEFT.colourReadRGB(SENSOR_READOUT_SCALING);
     auto rgb_right = TCS_RIGHT.colourReadRGB(SENSOR_READOUT_SCALING);
 
-    Serial.println("Left: " + String(rgb_left.r) + " " + String(rgb_left.g) + " " + String(rgb_left.b));
-    Serial.println("Right: " + String(rgb_right.r) + " " + String(rgb_right.g) + " " + String(rgb_right.b));
+    // Serial.println("Left: " + String(rgb_left.r) + " " + String(rgb_left.g) + " " + String(rgb_left.b));
+    // Serial.println("Right: " + String(rgb_right.r) + " " + String(rgb_right.g) + " " + String(rgb_right.b));
 
     // Find direction
     Direction direction = Direction::FORWARD;
@@ -242,10 +246,10 @@ void loop()
     if (direction != Direction::FORWARD)
     {
         // If we're turning, we need to wait for the robot to turn before we can read the colour again
-        delay(80);
+        delay(20);
     } else {
-        delay(50);
+        delay(40);
         move(Direction::FORWARD, 0.2, 0.2);
-        delay(50);
+        delay(40);
     }
 }
