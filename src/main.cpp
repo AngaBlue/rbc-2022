@@ -63,16 +63,17 @@ void loop()
         direction = Direction::RIGHT;
     }
 
-    // Move the robot
-    move(direction, 1, 1);
+    // Move the robot.
+    move(direction);
 
     if (direction != Direction::FORWARD)
     {
-        // If we're turning, we need to wait for the robot to turn before we can read the colour again
+        // If we're turning, we need to wait for the robot to turn before we can read the colour again.
         delay(20);
     }
     else
     {
+        // Poor man's PWM to slow the robot's speed.
         delay(40);
         move(Direction::FORWARD, 0.2, 0.2);
         delay(40);
