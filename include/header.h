@@ -4,7 +4,7 @@
 #define COLOUR_COUNT 5
 #define SPEED 140
 #define SENSOR_READOUT_SCALING 100
-#define RIGHT_MOTOR_OFFSET * 0.9
+#define RIGHT_MOTOR_OFFSET * 0.85
 #define TURN_OFFSET * 0.68
 
 // Shared colour sensor pins
