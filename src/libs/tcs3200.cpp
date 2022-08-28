@@ -1,5 +1,5 @@
 /*  CPP FILE - TCS3200 library
- *  TCS3200 color sensor library
+ *  TCS3200 colour sensor library
  *  author: Panjkrc
  *  date: 12/14/2019
  *  url: https://github.com/Panjkrc/TCS3200_library
@@ -23,7 +23,7 @@ tcs3200::tcs3200(uint8_t S0, uint8_t S1, uint8_t S2, uint8_t S3, uint8_t output)
 	_output = output;
 }
 
-int tcs3200::colorRead(char color, int scaling)
+int tcs3200::colourRead(char colour, int scaling)
 {
 
 	switch (scaling)
@@ -54,7 +54,7 @@ int tcs3200::colorRead(char color, int scaling)
 		break;
 	}
 
-	switch (color)
+	switch (colour)
 	{
 	case 'r': // Setting red filtered photodiodes to be read
 		digitalWrite(_S2, LOW);
@@ -88,7 +88,7 @@ int tcs3200::colorRead(char color, int scaling)
 	
 	if (duration != 0)
 	{
-		return 1000 / duration; // Reads and returns the frequency of selected color
+		return 1000 / duration; // Reads and returns the frequency of selected colour
 	}
 	else
 	{
@@ -96,17 +96,17 @@ int tcs3200::colorRead(char color, int scaling)
 	}
 }
 
-int tcs3200::closestColorIndex(int distinctRGB[][3], int num_of_colors, int scaling, int * const returnDistance)
+int tcs3200::closestColour(uint8_t distinctRGB[][3], int num_of_colours, int scaling, int * const returnDistance)
 {
-	int index = -1; // return -1 if no declared color matches color sensor is reading
+	int index = -1; // return -1 if no declared colour matches colour sensor is reading
 	int smallestDistance = 765;
 	int r, g, b;
 
-	r = colorRead('r', scaling);
-	g = colorRead('g', scaling);
-	b = colorRead('b', scaling);
+	r = colourRead('r', scaling);
+	g = colourRead('g', scaling);
+	b = colourRead('b', scaling);
 
-	for (int i = 0; i < num_of_colors; i++)
+	for (int i = 0; i < num_of_colours; i++)
 	{
 		int distance = sqrt(pow(r - distinctRGB[i][0], 2) + pow(g - distinctRGB[i][1], 2) + pow(b - distinctRGB[i][2], 2));
 		if (distance < smallestDistance)
@@ -122,11 +122,11 @@ int tcs3200::closestColorIndex(int distinctRGB[][3], int num_of_colors, int scal
 	return index;
 }
 
-RGB tcs3200::colorReadRGB(int scaling) 
+RGB tcs3200::colourReadRGB(int scaling) 
 {
 	RGB rgb;
-	rgb.r = colorRead('r', scaling);
-	rgb.g = colorRead('g', scaling);
-	rgb.b = colorRead('b', scaling);
+	rgb.r = colourRead('r', scaling);
+	rgb.g = colourRead('g', scaling);
+	rgb.b = colourRead('b', scaling);
 	return rgb;
 }

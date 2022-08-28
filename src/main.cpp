@@ -38,7 +38,7 @@
 #define RIGHT_IN2 A2
 
 // Define RGB values for colours, these must match the same order as the enum
-int RGBColorsLeft[COLOUR_COUNT][3] = {
+uint8_t RGBColoursLeft[COLOUR_COUNT][3] = {
     {76, 76, 100},  // Green
     {125, 100, 90}, // Yellow
     {111, 58, 76},  // Red
@@ -46,7 +46,7 @@ int RGBColorsLeft[COLOUR_COUNT][3] = {
     {125, 111, 142} // White
 };
 
-int RGBColorsRight[COLOUR_COUNT][3] = {
+uint8_t RGBColoursRight[COLOUR_COUNT][3] = {
     {55, 62, 71},   // Green
     {125, 100, 90}, // Yellow
     {111, 58, 76},  // Red
@@ -129,7 +129,7 @@ float getSpeedFactorFromDistance(Colour newColour, int distance, Side sensorLoca
     /*
      * General idea is that we can figure out how much of the line the sensor
      * is reading based on the colour's "distance" from the full-patch readout
-     * (see RGBColorsLeft, RGBColorsRight). Using this distance, we can scale
+     * (see RGBColoursLeft, RGBColoursRight). Using this distance, we can scale
      * the motor's power output to turn a more appropriate amount instead of
      * always going to 11.
      *
@@ -160,15 +160,15 @@ float getSpeedFactorFromDistance(Colour newColour, int distance, Side sensorLoca
     switch (sensorLocation)
     {
     case Side::LEFT:
-        diffR = RGBColorsLeft[colourIndex][0] - RGBColorsLeft[WHITE_INDEX][0];
-        diffG = RGBColorsLeft[colourIndex][1] - RGBColorsLeft[WHITE_INDEX][1];
-        diffB = RGBColorsLeft[colourIndex][2] - RGBColorsLeft[WHITE_INDEX][2];
+        diffR = RGBColoursLeft[colourIndex][0] - RGBColoursLeft[WHITE_INDEX][0];
+        diffG = RGBColoursLeft[colourIndex][1] - RGBColoursLeft[WHITE_INDEX][1];
+        diffB = RGBColoursLeft[colourIndex][2] - RGBColoursLeft[WHITE_INDEX][2];
         break;
 
     case Side::RIGHT:
-        diffR = RGBColorsRight[colourIndex][0] - RGBColorsRight[WHITE_INDEX][0];
-        diffG = RGBColorsRight[colourIndex][1] - RGBColorsRight[WHITE_INDEX][1];
-        diffB = RGBColorsRight[colourIndex][2] - RGBColorsRight[WHITE_INDEX][2];
+        diffR = RGBColoursRight[colourIndex][0] - RGBColoursRight[WHITE_INDEX][0];
+        diffG = RGBColoursRight[colourIndex][1] - RGBColoursRight[WHITE_INDEX][1];
+        diffB = RGBColoursRight[colourIndex][2] - RGBColoursRight[WHITE_INDEX][2];
         break;
 
     case Side::UNBIASED:
@@ -206,15 +206,15 @@ void loop()
 {
     int dist_left, dist_right;
 
-    // Read both color sensors
-    Colour c_left = (Colour)TCS_LEFT.closestColorIndex(RGBColorsLeft, COLOUR_COUNT, SENSOR_READOUT_SCALING, &dist_left);
-    Colour c_right = (Colour)TCS_RIGHT.closestColorIndex(RGBColorsRight, COLOUR_COUNT, SENSOR_READOUT_SCALING, &dist_right);
+    // Read both colour sensors
+    Colour c_left = (Colour)TCS_LEFT.closestColour(RGBColoursLeft, COLOUR_COUNT, SENSOR_READOUT_SCALING, &dist_left);
+    Colour c_right = (Colour)TCS_RIGHT.closestColour(RGBColoursRight, COLOUR_COUNT, SENSOR_READOUT_SCALING, &dist_right);
 
-    // Print the color values
+    // Print the colour values
     Serial.println("Left: " + colourNameFromEnum(c_left) + " Right: " + colourNameFromEnum(c_right));
 
-    auto rgb_left = TCS_LEFT.colorReadRGB(SENSOR_READOUT_SCALING);
-    auto rgb_right = TCS_RIGHT.colorReadRGB(SENSOR_READOUT_SCALING);
+    auto rgb_left = TCS_LEFT.colourReadRGB(SENSOR_READOUT_SCALING);
+    auto rgb_right = TCS_RIGHT.colourReadRGB(SENSOR_READOUT_SCALING);
 
     Serial.println("Left: " + String(rgb_left.r) + " " + String(rgb_left.g) + " " + String(rgb_left.b));
     Serial.println("Right: " + String(rgb_right.r) + " " + String(rgb_right.g) + " " + String(rgb_right.b));
