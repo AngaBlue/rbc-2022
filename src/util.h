@@ -1,7 +1,7 @@
-#include <Arduino.h>
-
 #ifndef util_h
 #define util_h
+
+#include <Arduino.h>
 
 /**
  * @brief The direction in which the Robot can move.
