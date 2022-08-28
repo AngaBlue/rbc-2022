@@ -6,9 +6,9 @@
  */
 
 #include "Arduino.h"
-#include "tcs3200.h"
+#include "TCS3200.h"
 
-tcs3200::tcs3200(uint8_t S0, uint8_t S1, uint8_t S2, uint8_t S3, uint8_t output)
+TCS3200::TCS3200(uint8_t S0, uint8_t S1, uint8_t S2, uint8_t S3, uint8_t output)
 {
 	pinMode(S0, OUTPUT);
 	pinMode(S1, OUTPUT);
@@ -23,7 +23,7 @@ tcs3200::tcs3200(uint8_t S0, uint8_t S1, uint8_t S2, uint8_t S3, uint8_t output)
 	_output = output;
 }
 
-int tcs3200::colourRead(char colour, int scaling)
+int TCS3200::colourRead(char colour, int scaling)
 {
 
 	switch (scaling)
@@ -96,7 +96,7 @@ int tcs3200::colourRead(char colour, int scaling)
 	}
 }
 
-int tcs3200::closestColour(uint8_t distinctRGB[][3], int num_of_colours, int scaling, int * const returnDistance)
+int TCS3200::closestColour(uint8_t distinctRGB[][3], int num_of_colours, int scaling)
 {
 	int index = -1; // return -1 if no declared colour matches colour sensor is reading
 	int smallestDistance = 765;
@@ -116,13 +116,10 @@ int tcs3200::closestColour(uint8_t distinctRGB[][3], int num_of_colours, int sca
 		}
 	}
 
-	// returnDistance is the Pythagorean distance to the colour we have the index of
-	// Maybe return a struct if we're not tooooo picky about memory usage
-	(*returnDistance) = smallestDistance;
 	return index;
 }
 
-RGB tcs3200::colourReadRGB(int scaling) 
+RGB TCS3200::colourReadRGB(int scaling) 
 {
 	RGB rgb;
 	rgb.r = colourRead('r', scaling);
