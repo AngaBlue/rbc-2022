@@ -1,7 +1,7 @@
-#include <Arduino.h>
+#ifndef util_h
+#define util_h
 
-#ifndef UTIL_H
-#define UTIL_H
+#include <Arduino.h>
 
 /**
  * @brief The direction in which the Robot can move.
@@ -20,9 +20,6 @@ enum class Direction
  */
 enum class Colour
 {
-    GREEN,
-    YELLOW,
-    RED,
     BLACK,
     WHITE
 };
@@ -42,5 +39,14 @@ String directionNameFromEnum(Direction direction);
  * @return The colour as a string.
  */
 String colourNameFromEnum(Colour colour);
+
+/**
+ * @brief Moves the robot in the direction specified.
+ *
+ * @param direction The direction to move the robot in.
+ * @param left_multiplier The speed multiplier to use for the left motor.
+ * @param right_multiplier The speed multiplier to use for the right motor.
+ */
+void move(Direction direction, float left_multiplier = 1, float right_multiplier = 1);
 
 #endif
