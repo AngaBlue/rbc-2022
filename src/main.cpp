@@ -4,6 +4,8 @@
 #include "libs/tcs3200.h"
 #include "util.h"
 
+// #define LOGGING LOGGING
+
 // Number of colours to detect
 #define COLOUR_COUNT 5
 #define SPEED 138
@@ -74,7 +76,9 @@ tcs3200 TCS_RIGHT(S0, S1, S2, S3, C_OUT_RIGHT);
  */
 void move(Direction direction, float left_multiplier = 1, float right_multiplier = 1)
 {
+    #ifdef LOGGING
     Serial.println("Moving " + directionNameFromEnum(direction));
+    #endif
 
     if (direction != Direction::BACKWARD)
     {
@@ -127,7 +131,9 @@ float getSpeedFactorFromDistance(Colour newColour, int distance, Side sensorLoca
 void setup()
 {
     // Begin serial communication for logging
+    #ifdef LOGGING
     Serial.begin(9600);
+    #endif
 
     // Initialise all motor pins.  The colour sensors are initialised in the sensor constructor.
     pinMode(A0, OUTPUT);
@@ -146,6 +152,7 @@ void loop()
     Colour c_left = (Colour)TCS_LEFT.closestColour(RGBColoursLeft, COLOUR_COUNT, SENSOR_READOUT_SCALING, &dist_left);
     Colour c_right = (Colour)TCS_RIGHT.closestColour(RGBColoursRight, COLOUR_COUNT, SENSOR_READOUT_SCALING, &dist_right);
 
+    #ifdef LOGGING
     // Print the colour values
     Serial.println("Left: " + colourNameFromEnum(c_left) + " Right: " + colourNameFromEnum(c_right));
 
@@ -154,8 +161,7 @@ void loop()
 
     Serial.println("Left: " + String(rgb_left.r) + " " + String(rgb_left.g) + " " + String(rgb_left.b));
     Serial.println("Right: " + String(rgb_right.r) + " " + String(rgb_right.g) + " " + String(rgb_right.b));
-
-    delay(1000);
+    #endif
 
     // Find direction
     Direction direction = Direction::FORWARD;
