@@ -1,11 +1,4 @@
-/*  CPP FILE - TCS3200 library
- *  TCS3200 colour sensor library
- *  author: Panjkrc
- *  date: 12/14/2019
- *  url: https://github.com/Panjkrc/TCS3200_library
- */
-
-#include "Arduino.h"
+#include <Arduino.h>
 #include "TCS3200.h"
 
 TCS3200::TCS3200(uint8_t S0, uint8_t S1, uint8_t S2, uint8_t S3, uint8_t output)
@@ -28,13 +21,13 @@ int TCS3200::colourRead(char colour, int scaling)
 
 	switch (scaling)
 	{
-	case 0:
-		digitalWrite(_S0, LOW); // Set scaling to 0%(scaling is turned OFF)
+	case 0: // Set scaling to 0% (scaling is turned OFF)
+		digitalWrite(_S0, LOW);
 		digitalWrite(_S1, LOW);
 		break;
 
-	case 2:
-		digitalWrite(_S0, LOW); // Set scaling to 2%
+	case 2: // Set scaling to 2%
+		digitalWrite(_S0, LOW); 
 		digitalWrite(_S1, HIGH);
 		break;
 
@@ -66,7 +59,7 @@ int TCS3200::colourRead(char colour, int scaling)
 		digitalWrite(_S3, HIGH);
 		break;
 
-	case 'c': // Setting clear photodiodes(no filters on diodes) to be read
+	case 'c': // Setting clear photodiodes (no filters on diodes) to be read
 		digitalWrite(_S2, HIGH);
 		digitalWrite(_S3, LOW);
 		break;
