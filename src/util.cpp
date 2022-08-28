@@ -5,8 +5,14 @@ String colourNameFromEnum(Colour input)
 {
     switch (input)
     {
+    case Colour::RED:
+        return "RED";
+    case Colour::GREEN:
+        return "GREEN";
     case Colour::BLACK:
         return "BLACK";
+    case Colour::YELLOW:
+        return "YELLOW";
     case Colour::WHITE:
         return "WHITE";
     default:

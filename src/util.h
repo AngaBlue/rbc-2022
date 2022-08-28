@@ -20,6 +20,9 @@ enum class Direction
  */
 enum class Colour
 {
+    GREEN,
+    YELLOW,
+    RED,
     BLACK,
     WHITE
 };

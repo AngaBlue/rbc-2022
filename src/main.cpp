@@ -6,10 +6,10 @@
 
 // Number of colours to detect
 #define COLOUR_COUNT 5
-#define SPEED 160
+#define SPEED 138
 #define SENSOR_READOUT_SCALING 100
 #define RIGHT_MOTOR_OFFSET * 0.9
-#define TURN_OFFSET * 0.75
+#define TURN_OFFSET * 0.48
 #define MOVEMENT_CHECK_DELAY 0
 
 // Shared colour sensor pins
@@ -39,13 +39,19 @@
 
 // Define RGB values for colours, these must match the same order as the enum
 uint8_t RGBColoursLeft[COLOUR_COUNT][3] = {
-    {47, 41, 55},   // Black
+    {66, 76, 90},  // Green
+    {142, 111, 100},// Yellow
+    {125, 62, 83},  // Red
+    {20, 21, 35},   // Black
     {166, 166, 200} // White
 };
 
 uint8_t RGBColoursRight[COLOUR_COUNT][3] = {
-    {62, 55, 66},   // Black
-    {125, 125, 142} // White
+    {52, 58, 66},    // Green
+    {111, 83, 76},   // Yellow
+    {100, 47, 62},   // Red
+    {42, 35, 46},    // Black
+    {125, 125, 142}  // White
 };
 
 enum class Side
@@ -83,12 +89,16 @@ void move(Direction direction, float left_multiplier = 1, float right_multiplier
         // No multiplier for the left/right turning radius as if it's the 
         // "closest" colour then we should probably drive it full-speed
         case Direction::LEFT:
-            analogWrite(LEFT_ENA, LOW);
+            analogWrite(LEFT_ENA, SPEED TURN_OFFSET * 0.68);
+            digitalWrite(LEFT_IN1, LOW);
+            digitalWrite(LEFT_IN2, HIGH);
             analogWrite(RIGHT_ENA, SPEED RIGHT_MOTOR_OFFSET TURN_OFFSET);
             break;
         case Direction::RIGHT:
             analogWrite(LEFT_ENA, SPEED TURN_OFFSET);
-            analogWrite(RIGHT_ENA, LOW);
+            analogWrite(RIGHT_ENA, SPEED TURN_OFFSET * 0.68);
+            digitalWrite(RIGHT_IN1, LOW);
+            digitalWrite(RIGHT_IN2, HIGH);
             break;
         case Direction::FORWARD:
             analogWrite(LEFT_ENA, SPEED * left_multiplier);
@@ -112,80 +122,6 @@ void move(Direction direction, float left_multiplier = 1, float right_multiplier
 float getSpeedFactorFromDistance(Colour newColour, int distance, Side sensorLocation)
 {
     return 1;
-    /*
-     * General idea is that we can figure out how much of the line the sensor
-     * is reading based on the colour's "distance" from the full-patch readout
-     * (see RGBColoursLeft, RGBColoursRight). Using this distance, we can scale
-     * the motor's power output to turn a more appropriate amount instead of
-     * always going to 11.
-     *
-     * Maximum distance between white and an arbitrary colour is 53.2 (W->Y,
-     * left sensor) or 81.8 (W-Y, right sensor). I'm using 65 as a fallback
-     * value in case something in the code is broken.
-     *
-     * If the value is larger than that... the good way would be to calculate
-     * maximums for all possible colour transitions. I'll do this each call
-     * instead of as a LUT because I'm lazy - could definitely use a macro or
-     * something to do it at compile-time but this is hopefully fast enough.
-     *
-     * Does the Arduino have accelerated division..?
-     */
-
-    const int colourIndex = (int)newColour;
-    Serial.println("Colour index: " + String(colourIndex));
-
-    // Max speed for the motors to turn
-    const float MAX_SPEED_SCALE = 1;
-    // Set min speed to half - will have to tweak later
-    const float MIN_SPEED_SCALE = 0.75;
-
-    // Assume always transitioning from WHITE
-    // const int WHITE_INDEX = (int)Colour::WHITE;
-
-    // // Find the maximum value differences for each colour (assumed white start)
-    // int diffR, diffG, diffB;
-    // switch (sensorLocation)
-    // {
-    // case Side::LEFT:
-    //     diffR = RGBColoursLeft[colourIndex][0] - RGBColoursLeft[WHITE_INDEX][0];
-    //     diffG = RGBColoursLeft[colourIndex][1] - RGBColoursLeft[WHITE_INDEX][1];
-    //     diffB = RGBColoursLeft[colourIndex][2] - RGBColoursLeft[WHITE_INDEX][2];
-    //     break;
-
-    // case Side::RIGHT:
-    //     diffR = RGBColoursRight[colourIndex][0] - RGBColoursRight[WHITE_INDEX][0];
-    //     diffG = RGBColoursRight[colourIndex][1] - RGBColoursRight[WHITE_INDEX][1];
-    //     diffB = RGBColoursRight[colourIndex][2] - RGBColoursRight[WHITE_INDEX][2];
-    //     break;
-
-    // case Side::UNBIASED:
-    //     // This shouldn't happen.
-    //     diffR = diffG = diffB = 65;
-    //     Serial.println("Invalid side input to turn power calculator.");
-    //     break;
-    // }
-
-    // Same algorithm used in the library
-    // float maxDistance = sqrt(pow(diffR, 2) + pow(diffG, 2) + pow(diffB, 2));
-    // The closer the distance is to 0, the less we want to turn
-
-    const int maxDistance = 65;
-
-    float turn_power_reduction;
-    if (maxDistance != 0) {
-        // Scale the turn power to the max/min speed scale
-        turn_power_reduction = (float)distance / maxDistance;
-    } else {
-        // If the max distance is 0, we're probably on the line
-        turn_power_reduction = MAX_SPEED_SCALE;
-    }
-
-    Serial.println("Max distance: " + String(maxDistance) + " Distance: " + String(distance));
-
-    // Scale the speed based on the turn power
-    float multiplier = MAX_SPEED_SCALE - (MAX_SPEED_SCALE - MIN_SPEED_SCALE) * turn_power_reduction;
-    Serial.println("Turn power: " + String(turn_power_reduction) + " Multiplier: " + String(multiplier));
-    return multiplier;
 }
 
 void setup()
@@ -219,6 +155,8 @@ void loop()
     Serial.println("Left: " + String(rgb_left.r) + " " + String(rgb_left.g) + " " + String(rgb_left.b));
     Serial.println("Right: " + String(rgb_right.r) + " " + String(rgb_right.g) + " " + String(rgb_right.b));
 
+    delay(1000);
+
     // Find direction
     Direction direction = Direction::FORWARD;
     if (c_left == Colour::BLACK)
@@ -242,7 +180,7 @@ void loop()
     if (direction != Direction::FORWARD)
     {
         // If we're turning, we need to wait for the robot to turn before we can read the colour again
-        delay(80);
+        delay(40);
     } else {
         delay(50);
         move(Direction::FORWARD, 0.2, 0.2);
