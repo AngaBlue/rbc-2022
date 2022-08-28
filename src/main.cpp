@@ -48,13 +48,6 @@ uint8_t RGBColoursRight[COLOUR_COUNT][3] = {
     {125, 125, 142} // White
 };
 
-enum class Side
-{
-    LEFT,
-    RIGHT,
-    UNBIASED
-};
-
 // Sensors
 TCS3200 TCS_LEFT(S0, S1, S2, S3, C_OUT_LEFT);
 TCS3200 TCS_RIGHT(S0, S1, S2, S3, C_OUT_RIGHT);
