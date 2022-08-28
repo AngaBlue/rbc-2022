@@ -17,12 +17,6 @@
 #define C_OUT_LEFT 13
 #define C_OUT_RIGHT 12
 
-// Ultrasonic sensor control
-#define UT 2
-
-// Ultrasonic output
-#define U_OUT 3
-
 // Motor control
 #define LEFT_ENA 5
 #define LEFT_IN1 A4

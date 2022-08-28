@@ -6,49 +6,30 @@ This repository is for Bazinga! Engineers' entry into Monash's 2022 Robot Buildi
 
 ### Colour Sensors
 
-| Pin Number | Assignment                                                |
-| ---------- | --------------------------------------------------------- |
-| 0          | Reserved                                                  |
-| 1          | Reserved                                                  |
-| 2          | **Ultrasonic**                                            |
-| 3          | **Ultrasonic**                                            |
-| 4          | Disconnected                                              |
-| 5          | Disconnected                                              |
-| 6          | <div style="color: brown">S3 (*shared*)</div>             |
-| 7          | <div style="color: brown">S2 (*shared*)</div>             |
-| 8          | <div style="color: orange">S1 (*shared*)</div>            |
-| 9          | <div style="color: purple">Unconnected (*shared*)</div>   |
-| 10         | <div style="color: yellow">OE (*shared*)</div>            |
-| 11         | <div style="color: green">S0 (*shared*)</div>             |
-| 12         | <div style="color:lightblue"> Output</div>                |
-| 13         | <div style="color:lightblue"> Output</div>                |
-
-### Ultrasonic
-
-| Pin Number | Assignment                                                |
-| ---------- | --------------------------------------------------------- |
-| 0          | Reserved                                                  |
-| 1          | Reserved                                                  |
-| 2          | <div style="color:lightblue"> Trigger</div>               |
-| 3          | <div style="color:lightblue"> Echo</div>                  |
-| 4          | Disconnected                                              |
-| 5          | Disconnected                                              |
-| 6          | **Colour Sensor**                                         |
-| 7          | **Colour Sensor**                                         |
-| 8          | **Colour Sensor**                                         |
-| 9          | **Colour Sensor**                                         |
-| 10         | **Colour Sensor**                                         |
-| 11         | **Colour Sensor**                                         |
-| 12         | **Colour Sensor**                                         |
-| 13         | **Colour Sensor**                                         |
+| Pin Number | Assignment                                              |
+| ---------- | ------------------------------------------------------- |
+| 0          | Reserved                                                |
+| 1          | Reserved                                                |
+| 2          | Disconnected                                            |
+| 3          | Disconnected                                            |
+| 4          | Disconnected                                            |
+| 5          | Disconnected                                            |
+| 6          | <div style="color: brown">S3 (_shared_)</div>           |
+| 7          | <div style="color: brown">S2 (_shared_)</div>           |
+| 8          | <div style="color: orange">S1 (_shared_)</div>          |
+| 9          | <div style="color: purple">Unconnected (_shared_)</div> |
+| 10         | <div style="color: yellow">OE (_shared_)</div>          |
+| 11         | <div style="color: green">S0 (_shared_)</div>           |
+| 12         | <div style="color:lightblue"> Output</div>              |
+| 13         | <div style="color:lightblue"> Output</div>              |
 
 ### Motors
 
-| Pin Number  | Assignment                                              |
-| ----------- | ------------------------------------------------------- |
-| A0          | <div style="color:lightblue">LEFT_ENA</div>             |
-| A1          | <div style="color:lightblue">LEFT_IN1</div>             |
-| A2          | <div style="color:lightblue">LEFT_IN2</div>             |
-| A3          | <div style="color:lightblue">RIGHT_ENA</div>            |
-| A4          | <div style="color:lightblue">RIGHT_IN1</div>            |
-| A5          | <div style="color:lightblue">RIGHT_IN2</div>            |
+| Pin Number | Assignment                                   |
+| ---------- | -------------------------------------------- |
+| A0         | <div style="color:lightblue">LEFT_ENA</div>  |
+| A1         | <div style="color:lightblue">LEFT_IN1</div>  |
+| A2         | <div style="color:lightblue">LEFT_IN2</div>  |
+| A3         | <div style="color:lightblue">RIGHT_ENA</div> |
+| A4         | <div style="color:lightblue">RIGHT_IN1</div> |
+| A5         | <div style="color:lightblue">RIGHT_IN2</div> |
