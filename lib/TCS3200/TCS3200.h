@@ -1,6 +1,4 @@
-#ifndef TCS3200_h
-#define TCS3200_h
-
+#pragma once
 #include <Arduino.h>
 
 /**
@@ -57,5 +55,3 @@ private:
 	uint8_t _S3;
 	uint8_t _output;
 };
-
-#endif

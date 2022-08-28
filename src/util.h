@@ -1,6 +1,4 @@
-#ifndef util_h
-#define util_h
-
+#pragma once
 #include <Arduino.h>
 
 /**
@@ -48,5 +46,3 @@ String colourNameFromEnum(Colour colour);
  * @param right_multiplier The speed multiplier to use for the right motor.
  */
 void move(Direction direction, float left_multiplier = 1, float right_multiplier = 1);
-
-#endif

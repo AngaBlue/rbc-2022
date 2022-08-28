@@ -5,12 +5,12 @@
 #include "header.h"
 
 // Define RGB values for colours, these must match the same order as the enum
-uint8_t RGBColoursLeft[COLOUR_COUNT][3] = {
+static uint8_t RGBColoursLeft[COLOUR_COUNT][3] = {
     {47, 41, 55},   // Black
     {166, 166, 200} // White
 };
 
-uint8_t RGBColoursRight[COLOUR_COUNT][3] = {
+static uint8_t RGBColoursRight[COLOUR_COUNT][3] = {
     {62, 55, 66},   // Black
     {125, 125, 142} // White
 };

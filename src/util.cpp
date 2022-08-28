@@ -42,6 +42,7 @@ void move(Direction direction, float left_multiplier, float right_multiplier)
 
     if (direction != Direction::BACKWARD)
     {
+        // Default drive forward.
         digitalWrite(LEFT_IN1, HIGH);
         digitalWrite(LEFT_IN2, LOW);
         digitalWrite(RIGHT_IN1, HIGH);
