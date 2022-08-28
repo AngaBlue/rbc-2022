@@ -7,8 +7,8 @@
 // #define LOGGING LOGGING
 
 // Number of colours to detect
-#define COLOUR_COUNT 5
-#define SPEED 138
+#define COLOUR_COUNT 4
+#define SPEED 140
 #define SENSOR_READOUT_SCALING 100
 #define RIGHT_MOTOR_OFFSET * 0.9
 #define TURN_OFFSET * 0.48
@@ -41,7 +41,7 @@
 
 // Define RGB values for colours, these must match the same order as the enum
 uint8_t RGBColoursLeft[COLOUR_COUNT][3] = {
-    {66, 76, 90},  // Green
+    //{66, 76, 90},  // Green
     {142, 111, 100},// Yellow
     {125, 62, 83},  // Red
     {20, 21, 35},   // Black
@@ -49,7 +49,7 @@ uint8_t RGBColoursLeft[COLOUR_COUNT][3] = {
 };
 
 uint8_t RGBColoursRight[COLOUR_COUNT][3] = {
-    {52, 58, 66},    // Green
+    //{52, 58, 66},    // Green
     {111, 83, 76},   // Yellow
     {100, 47, 62},   // Red
     {42, 35, 46},    // Black
@@ -66,6 +66,8 @@ enum class Side
 // Sensors
 tcs3200 TCS_LEFT(S0, S1, S2, S3, C_OUT_LEFT);
 tcs3200 TCS_RIGHT(S0, S1, S2, S3, C_OUT_RIGHT);
+
+bool stop = false;
 
 /**
  * @brief Moves the robot in the direction specified.
@@ -93,20 +95,40 @@ void move(Direction direction, float left_multiplier = 1, float right_multiplier
         // No multiplier for the left/right turning radius as if it's the 
         // "closest" colour then we should probably drive it full-speed
         case Direction::LEFT:
-            analogWrite(LEFT_ENA, SPEED TURN_OFFSET * 0.68);
+            if (!stop) {
+                digitalWrite(RIGHT_IN1, LOW);
+                digitalWrite(RIGHT_IN2, HIGH);
+                delay(20);
+                stop = true;
+            }
+
             digitalWrite(LEFT_IN1, LOW);
             digitalWrite(LEFT_IN2, HIGH);
             analogWrite(RIGHT_ENA, SPEED RIGHT_MOTOR_OFFSET TURN_OFFSET);
+            analogWrite(LEFT_ENA, SPEED TURN_OFFSET * 0.68);
+            digitalWrite(RIGHT_IN1, HIGH);
+            digitalWrite(RIGHT_IN2, LOW);
             break;
         case Direction::RIGHT:
-            analogWrite(LEFT_ENA, SPEED TURN_OFFSET);
-            analogWrite(RIGHT_ENA, SPEED TURN_OFFSET * 0.68);
+            if (!stop) {
+                digitalWrite(LEFT_IN1, LOW);
+                digitalWrite(LEFT_IN2, HIGH);
+                delay(20);
+                stop = true;
+            }
+
             digitalWrite(RIGHT_IN1, LOW);
             digitalWrite(RIGHT_IN2, HIGH);
+            delay(20);
+            analogWrite(LEFT_ENA, SPEED TURN_OFFSET);
+            analogWrite(RIGHT_ENA, SPEED TURN_OFFSET * 0.68);
+            digitalWrite(LEFT_IN1, HIGH);
+            digitalWrite(LEFT_IN2, LOW);
             break;
         case Direction::FORWARD:
             analogWrite(LEFT_ENA, SPEED * left_multiplier);
             analogWrite(RIGHT_ENA, SPEED RIGHT_MOTOR_OFFSET * right_multiplier);
+            stop = false;
             break;
         case Direction::BACKWARD:
             analogWrite(LEFT_ENA, SPEED * left_multiplier);
@@ -115,10 +137,12 @@ void move(Direction direction, float left_multiplier = 1, float right_multiplier
             digitalWrite(LEFT_IN2, HIGH);
             digitalWrite(RIGHT_IN1, LOW);
             digitalWrite(RIGHT_IN2, HIGH);
+            stop = false;
             break;
         case Direction::STOP:
             analogWrite(LEFT_ENA, LOW);
             analogWrite(RIGHT_ENA, LOW);
+            stop = false;
             break;
     }
 }
@@ -189,7 +213,7 @@ void loop()
         delay(40);
     } else {
         delay(50);
-        move(Direction::FORWARD, 0.2, 0.2);
+        move(Direction::FORWARD, 0.15, 0.15);
         delay(50);
     }
 }

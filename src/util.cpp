@@ -7,8 +7,8 @@ String colourNameFromEnum(Colour input)
     {
     case Colour::RED:
         return "RED";
-    case Colour::GREEN:
-        return "GREEN";
+    // case Colour::GREEN:
+    //     return "GREEN";
     case Colour::BLACK:
         return "BLACK";
     case Colour::YELLOW:
