@@ -24,7 +24,6 @@ public:
 	int closestColour(uint8_t distinctRGB[][3], int num_of_colours, int scaling, int * const returnDistance);
 	RGB colourReadRGB(int scaling);
 
-
 private:
 	uint8_t _S0;
 	uint8_t _S1;
