@@ -12,7 +12,8 @@
 #define TURN_OFFSET *1
 #define MOVEMENT_CHECK_DELAY 0
 
-#define STATE_CHANGE_THRESHOLD 100//milliseconds
+#define STATE_CHANGE_THRESHOLD 200//milliseconds
+#define MIN_STATE_CHANGE_THRESHOLD 50
 
 // Shared colour sensor pins
 #define S0 11
@@ -273,7 +274,8 @@ void loop()
         timeStartStateChangeL = millis();
     } else if(c_left_previous != Colour::WHITE && c_left == Colour::WHITE){
         timeEndStateChangeL = millis();
-        if (timeEndStateChangeL - timeStartStateChangeL <  STATE_CHANGE_THRESHOLD){
+        unsigned long difference = timeEndStateChangeL - timeStartStateChangeL;
+        if ( difference <  STATE_CHANGE_THRESHOLD && difference >  MIN_STATE_CHANGE_THRESHOLD){
             // Turn Left until color on left or break if color on right
             direction = Direction::LEFT;
             move(direction, left_motor_multiplier, right_motor_multiplier);
@@ -288,7 +290,9 @@ void loop()
     if (c_right_previous == Colour::WHITE && c_right != Colour::WHITE){
         timeStartStateChangeR = millis();            
     } else if (c_right_previous != Colour::WHITE && c_right == Colour::WHITE){
-        if (timeEndStateChangeR - timeStartStateChangeR <  STATE_CHANGE_THRESHOLD){
+        timeEndStateChangeR = millis();
+        unsigned long difference = timeEndStateChangeR - timeStartStateChangeR;
+        if (difference <  STATE_CHANGE_THRESHOLD && difference >  MIN_STATE_CHANGE_THRESHOLD){
             // Turn Right until color on Right or break if color on Left
             moved = true; 
             while((Colour)TCS_RIGHT.closestColorIndex(RGBColorsRight, COLOUR_COUNT, SENSOR_READOUT_SCALING, &dist_right) != Colour::WHITE){
