@@ -6,7 +6,7 @@
 
 // Number of colours to detect
 #define COLOUR_COUNT 5
-#define SPEED 125
+#define SPEED 150
 #define SENSOR_READOUT_SCALING 100
 #define RIGHT_MOTOR_OFFSET * 0.9
 #define TURN_OFFSET * 0.75
@@ -43,7 +43,7 @@ uint8_t RGBColoursLeft[COLOUR_COUNT][3] = {
     {125, 100, 90}, // Yellow
     {111, 58, 76},  // Red
     {47, 41, 55},   // Black
-    {125, 111, 142} // White
+    {166, 166, 200} // White
 };
 
 uint8_t RGBColoursRight[COLOUR_COUNT][3] = {
@@ -51,7 +51,7 @@ uint8_t RGBColoursRight[COLOUR_COUNT][3] = {
     {125, 100, 90}, // Yellow
     {111, 58, 76},  // Red
     {62, 55, 66},   // Black
-    {142, 125, 166} // White
+    {125, 125, 142} // White
 };
 
 enum class Side
@@ -146,6 +146,7 @@ float getSpeedFactorFromDistance(Colour newColour, int distance, Side sensorLoca
      */
 
     const int colourIndex = (int)newColour;
+    Serial.println("Colour index: " + String(colourIndex));
 
     // Max speed for the motors to turn
     const float MAX_SPEED_SCALE = 1;
@@ -155,36 +156,49 @@ float getSpeedFactorFromDistance(Colour newColour, int distance, Side sensorLoca
     // Assume always transitioning from WHITE
     const int WHITE_INDEX = (int)Colour::WHITE;
 
-    // Find the maximum value differences for each colour (assumed white start)
-    int diffR, diffG, diffB;
-    switch (sensorLocation)
-    {
-    case Side::LEFT:
-        diffR = RGBColoursLeft[colourIndex][0] - RGBColoursLeft[WHITE_INDEX][0];
-        diffG = RGBColoursLeft[colourIndex][1] - RGBColoursLeft[WHITE_INDEX][1];
-        diffB = RGBColoursLeft[colourIndex][2] - RGBColoursLeft[WHITE_INDEX][2];
-        break;
+    // // Find the maximum value differences for each colour (assumed white start)
+    // int diffR, diffG, diffB;
+    // switch (sensorLocation)
+    // {
+    // case Side::LEFT:
+    //     diffR = RGBColoursLeft[colourIndex][0] - RGBColoursLeft[WHITE_INDEX][0];
+    //     diffG = RGBColoursLeft[colourIndex][1] - RGBColoursLeft[WHITE_INDEX][1];
+    //     diffB = RGBColoursLeft[colourIndex][2] - RGBColoursLeft[WHITE_INDEX][2];
+    //     break;
 
-    case Side::RIGHT:
-        diffR = RGBColoursRight[colourIndex][0] - RGBColoursRight[WHITE_INDEX][0];
-        diffG = RGBColoursRight[colourIndex][1] - RGBColoursRight[WHITE_INDEX][1];
-        diffB = RGBColoursRight[colourIndex][2] - RGBColoursRight[WHITE_INDEX][2];
-        break;
+    // case Side::RIGHT:
+    //     diffR = RGBColoursRight[colourIndex][0] - RGBColoursRight[WHITE_INDEX][0];
+    //     diffG = RGBColoursRight[colourIndex][1] - RGBColoursRight[WHITE_INDEX][1];
+    //     diffB = RGBColoursRight[colourIndex][2] - RGBColoursRight[WHITE_INDEX][2];
+    //     break;
 
-    case Side::UNBIASED:
-        // This shouldn't happen.
-        diffR = diffG = diffB = 65;
-        Serial.println("Invalid side input to turn power calculator.");
-        break;
-    }
+    // case Side::UNBIASED:
+    //     // This shouldn't happen.
+    //     diffR = diffG = diffB = 65;
+    //     Serial.println("Invalid side input to turn power calculator.");
+    //     break;
+    // }
 
     // Same algorithm used in the library
-    float maxDistance = sqrt(pow(diffR, 2) + pow(diffG, 2) + pow(diffB, 2));
+    // float maxDistance = sqrt(pow(diffR, 2) + pow(diffG, 2) + pow(diffB, 2));
     // The closer the distance is to 0, the less we want to turn
-    float turn_power = (float)distance / maxDistance;
+
+    const int maxDistance = 65;
+
+    float turn_power_reduction;
+    if (maxDistance != 0) {
+        // Scale the turn power to the max/min speed scale
+        turn_power_reduction = (float)distance / maxDistance;
+    } else {
+        // If the max distance is 0, we're probably on the line
+        turn_power_reduction = MAX_SPEED_SCALE;
+    }
+
+    Serial.println("Max distance: " + String(maxDistance) + " Distance: " + String(distance));
 
     // Scale the speed based on the turn power
-    float multiplier = MIN_SPEED_SCALE + ((MAX_SPEED_SCALE - MIN_SPEED_SCALE) * turn_power);
+    float multiplier = MAX_SPEED_SCALE - (MAX_SPEED_SCALE - MIN_SPEED_SCALE) * turn_power_reduction;
+    Serial.println("Turn power: " + String(turn_power_reduction) + " Multiplier: " + String(multiplier));
     return multiplier;
 }
 
@@ -247,8 +261,8 @@ void loop()
     // Find speed multipliers
     // If the LEFT sensor is detecting a colour, drive the RIGHT one faster (likewise for flip)
     // At the moment, the sensor on WHITE will probably return a low multiplier (can fix but cbf right now)
-    float right_motor_multiplier = getSpeedFactorFromDistance(c_left, dist_left, Side::LEFT);
-    float left_motor_multiplier = getSpeedFactorFromDistance(c_right, dist_right, Side::RIGHT);
+    float left_motor_multiplier = getSpeedFactorFromDistance(c_left, dist_left, Side::LEFT);
+    float right_motor_multiplier = getSpeedFactorFromDistance(c_right, dist_right, Side::RIGHT);
 
     // Move the robot
     move(direction, left_motor_multiplier, right_motor_multiplier);
