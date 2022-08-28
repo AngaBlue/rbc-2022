@@ -6,7 +6,7 @@
 
 // Number of colours to detect
 #define COLOUR_COUNT 5
-#define SPEED 150
+#define SPEED 160
 #define SENSOR_READOUT_SCALING 100
 #define RIGHT_MOTOR_OFFSET * 0.9
 #define TURN_OFFSET * 0.75
@@ -39,17 +39,11 @@
 
 // Define RGB values for colours, these must match the same order as the enum
 uint8_t RGBColoursLeft[COLOUR_COUNT][3] = {
-    {76, 76, 100},  // Green
-    {125, 100, 90}, // Yellow
-    {111, 58, 76},  // Red
     {47, 41, 55},   // Black
     {166, 166, 200} // White
 };
 
 uint8_t RGBColoursRight[COLOUR_COUNT][3] = {
-    {55, 62, 71},   // Green
-    {125, 100, 90}, // Yellow
-    {111, 58, 76},  // Red
     {62, 55, 66},   // Black
     {125, 125, 142} // White
 };
@@ -61,17 +55,9 @@ enum class Side
     UNBIASED
 };
 
-typedef struct State
-{
-    Side side;
-    Colour colour;
-} State;
-
 // Sensors
 tcs3200 TCS_LEFT(S0, S1, S2, S3, C_OUT_LEFT);
 tcs3200 TCS_RIGHT(S0, S1, S2, S3, C_OUT_RIGHT);
-
-State state{.side = Side::UNBIASED, .colour = Colour::BLACK};
 
 /**
  * @brief Moves the robot in the direction specified.
@@ -83,7 +69,6 @@ State state{.side = Side::UNBIASED, .colour = Colour::BLACK};
 void move(Direction direction, float left_multiplier = 1, float right_multiplier = 1)
 {
     Serial.println("Moving " + directionNameFromEnum(direction));
-    Serial.println("Path: " + colourNameFromEnum(state.colour) + " Bias: " + (state.side == Side::LEFT ? "Left" : "Right"));
 
     if (direction != Direction::BACKWARD)
     {
@@ -126,6 +111,7 @@ void move(Direction direction, float left_multiplier = 1, float right_multiplier
 
 float getSpeedFactorFromDistance(Colour newColour, int distance, Side sensorLocation)
 {
+    return 1;
     /*
      * General idea is that we can figure out how much of the line the sensor
      * is reading based on the colour's "distance" from the full-patch readout
@@ -154,7 +140,7 @@ float getSpeedFactorFromDistance(Colour newColour, int distance, Side sensorLoca
     const float MIN_SPEED_SCALE = 0.75;
 
     // Assume always transitioning from WHITE
-    const int WHITE_INDEX = (int)Colour::WHITE;
+    // const int WHITE_INDEX = (int)Colour::WHITE;
 
     // // Find the maximum value differences for each colour (assumed white start)
     // int diffR, diffG, diffB;
@@ -233,27 +219,13 @@ void loop()
     Serial.println("Left: " + String(rgb_left.r) + " " + String(rgb_left.g) + " " + String(rgb_left.b));
     Serial.println("Right: " + String(rgb_right.r) + " " + String(rgb_right.g) + " " + String(rgb_right.b));
 
-    // If unbiased or left side, and non-white colour, track that path
-    if (c_left != Colour::WHITE && state.side != Side::RIGHT)
-    {
-        state.side = c_right == Colour::BLACK ? Side::LEFT : Side::UNBIASED;
-        state.colour = c_left;
-    }
-
-    // If unbiased or right side, and non-white colour, track that path
-    if (c_right != Colour::WHITE && state.side != Side::LEFT)
-    {
-        state.side = c_right == Colour::BLACK ? Side::RIGHT : Side::UNBIASED;
-        state.colour = c_right;
-    }
-
     // Find direction
     Direction direction = Direction::FORWARD;
-    if (c_left == state.colour)
+    if (c_left == Colour::BLACK)
     {
         direction = Direction::LEFT;
     }
-    else if (c_right == state.colour)
+    else if (c_right == Colour::BLACK)
     {
         direction = Direction::RIGHT;
     }
@@ -266,4 +238,14 @@ void loop()
 
     // Move the robot
     move(direction, left_motor_multiplier, right_motor_multiplier);
+
+    if (direction != Direction::FORWARD)
+    {
+        // If we're turning, we need to wait for the robot to turn before we can read the colour again
+        delay(80);
+    } else {
+        delay(50);
+        move(Direction::FORWARD, 0.2, 0.2);
+        delay(50);
+    }
 }
