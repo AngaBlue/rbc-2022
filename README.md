@@ -2,7 +2,8 @@
 
 This repository is for Bazinga! Engineers' entry into Monash's 2022 Robot Building Competition.
 
-## Arduino Pin-Outs
+## Arduino Uno Pin-Outs
+Pins and other defines are editable in `include/header.h`.
 
 ### Colour Sensors
 
@@ -33,3 +34,9 @@ This repository is for Bazinga! Engineers' entry into Monash's 2022 Robot Buildi
 | A3         | <div style="color:lightblue">RIGHT_ENA</div> |
 | A4         | <div style="color:lightblue">RIGHT_IN1</div> |
 | A5         | <div style="color:lightblue">RIGHT_IN2</div> |
+
+## Our Robot: Lobster
+Our robot named Lobster for its wiggly movement successfully completed all 3 courses with varying speed.
+
+![Lobster](https://i.imgur.com/tW5p9dX.jpeg)
+![Lobster](https://i.imgur.com/LALDwNp.jpeg)
