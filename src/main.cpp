@@ -12,6 +12,8 @@
 #define TURN_OFFSET *1
 #define MOVEMENT_CHECK_DELAY 0
 
+#define STATE_CHANGE_THRESHOLD 100//milliseconds
+
 // Shared colour sensor pins
 #define S0 11
 #define S1 8
@@ -73,6 +75,17 @@ tcs3200 TCS_RIGHT(S0, S1, S2, S3, C_OUT_RIGHT);
 
 State state{.side = Side::UNBIASED, .colour = Colour::BLACK};
 
+int dist_left, dist_right;
+Colour c_left_previous = (Colour)TCS_LEFT.closestColorIndex(RGBColorsLeft, COLOUR_COUNT, SENSOR_READOUT_SCALING, &dist_left);
+Colour c_right_previous = (Colour)TCS_RIGHT.closestColorIndex(RGBColorsRight, COLOUR_COUNT, SENSOR_READOUT_SCALING, &dist_right);
+
+bool stateChangeL;
+bool stateChangeR;
+unsigned long timeStartStateChangeL;
+unsigned long timeStartStateChangeR;
+unsigned long timeEndStateChangeL;
+unsigned long timeEndStateChangeR;
+
 /**
  * @brief Moves the robot in the direction specified.
  *
@@ -80,6 +93,9 @@ State state{.side = Side::UNBIASED, .colour = Colour::BLACK};
  * @param left_multiplier The speed multiplier to use for the left motor.
  * @param right_multiplier The speed multiplier to use for the right motor.
  */
+
+
+
 void move(Direction direction, float left_multiplier = 1, float right_multiplier = 1)
 {
     Serial.println("Moving " + directionNameFromEnum(direction));
@@ -204,11 +220,12 @@ void setup()
 
 void loop()
 {
-    int dist_left, dist_right;
+    
 
     // Read both color sensors
     Colour c_left = (Colour)TCS_LEFT.closestColorIndex(RGBColorsLeft, COLOUR_COUNT, SENSOR_READOUT_SCALING, &dist_left);
     Colour c_right = (Colour)TCS_RIGHT.closestColorIndex(RGBColorsRight, COLOUR_COUNT, SENSOR_READOUT_SCALING, &dist_right);
+
 
     // Print the color values
     Serial.println("Left: " + colourNameFromEnum(c_left) + " Right: " + colourNameFromEnum(c_right));
@@ -218,6 +235,30 @@ void loop()
 
     Serial.println("Left: " + String(rgb_left.r) + " " + String(rgb_left.g) + " " + String(rgb_left.b));
     Serial.println("Right: " + String(rgb_right.r) + " " + String(rgb_right.g) + " " + String(rgb_right.b));
+
+    if (c_left_previous != c_left){
+        if (stateChangeL){
+            timeStartStateChangeL = millis();
+        } else{
+
+            timeEndStateChangeL = millis();
+            if (timeEndStateChangeL - timeStartStateChangeL <  STATE_CHANGE_THRESHOLD){
+                // Turn Left until color on left or break if color on right
+            }
+        }
+    }
+
+    if (c_right_previous != c_right){
+        if (stateChangeR){
+            timeStartStateChangeR = millis();
+        } else{
+
+            timeEndStateChangeR = millis();
+            if (timeEndStateChangeR - timeStartStateChangeR <  STATE_CHANGE_THRESHOLD){
+                // Turn Right until color on Right or break if color on Left
+            }
+        }
+    }
 
     // If unbiased or left side, and non-white colour, track that path
     if (c_left != Colour::WHITE && state.side != Side::RIGHT)
