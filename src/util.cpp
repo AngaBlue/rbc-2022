@@ -52,7 +52,7 @@ void move(Direction direction, float left_multiplier, float right_multiplier)
     switch (direction)
     {
     // No multiplier for the left/right turning radius as if it's the
-    // "closest" colour then we should probably drive it full-speed
+    // "closest" colour then we should probably drive it full-speed.
     case Direction::LEFT:
         analogWrite(LEFT_ENA, SPEED TURN_OFFSET * 0.68);
         digitalWrite(LEFT_IN1, LOW);

@@ -21,27 +21,27 @@ int TCS3200::colourRead(char colour, int scaling)
 
 	switch (scaling)
 	{
-	case 0: // Set scaling to 0% (scaling is turned OFF)
+	case 0: // Set scaling to 0% (scaling is turned OFF).
 		digitalWrite(_S0, LOW);
 		digitalWrite(_S1, LOW);
 		break;
 
-	case 2: // Set scaling to 2%
+	case 2: // Set scaling to 2%.
 		digitalWrite(_S0, LOW); 
 		digitalWrite(_S1, HIGH);
 		break;
 
-	case 20: // Set scaling to 20%
+	case 20: // Set scaling to 20%.
 		digitalWrite(_S0, HIGH);
 		digitalWrite(_S1, LOW);
 		break;
 
-	case 100: // Set scaling to 100%
+	case 100: // Set scaling to 100%.
 		digitalWrite(_S0, HIGH);
 		digitalWrite(_S1, HIGH);
 		break;
 
-	default: // Set default scaling (default scaling is 20%)
+	default: // Set default scaling (default scaling is 20%).
 		digitalWrite(_S0, HIGH);
 		digitalWrite(_S1, LOW);
 		break;
@@ -49,22 +49,22 @@ int TCS3200::colourRead(char colour, int scaling)
 
 	switch (colour)
 	{
-	case 'r': // Setting red filtered photodiodes to be read
+	case 'r': // Setting red filtered photodiodes to be read.
 		digitalWrite(_S2, LOW);
 		digitalWrite(_S3, LOW);
 		break;
 
-	case 'b': // Setting blue filtered photodiodes to be read
+	case 'b': // Setting blue filtered photodiodes to be read.
 		digitalWrite(_S2, LOW);
 		digitalWrite(_S3, HIGH);
 		break;
 
-	case 'c': // Setting clear photodiodes (no filters on diodes) to be read
+	case 'c': // Setting clear photodiodes (no filters on diodes) to be read.
 		digitalWrite(_S2, HIGH);
 		digitalWrite(_S3, LOW);
 		break;
 
-	case 'g': // Setting green filtered photodiodes to be read
+	case 'g': // Setting green filtered photodiodes to be read.
 		digitalWrite(_S2, HIGH);
 		digitalWrite(_S3, HIGH);
 		break;
@@ -81,7 +81,7 @@ int TCS3200::colourRead(char colour, int scaling)
 	
 	if (duration != 0)
 	{
-		return 1000 / duration; // Reads and returns the frequency of selected colour
+		return 1000 / duration; // Reads and returns the frequency of selected colour.
 	}
 	else
 	{
@@ -91,7 +91,7 @@ int TCS3200::colourRead(char colour, int scaling)
 
 int TCS3200::closestColour(uint8_t distinctRGB[][3], int num_of_colours, int scaling)
 {
-	int index = -1; // return -1 if no declared colour matches colour sensor is reading
+	int index = -1; // return -1 if no declared colour matches colour sensor is reading.
 	int smallestDistance = 765;
 	int r, g, b;
 
@@ -115,8 +115,10 @@ int TCS3200::closestColour(uint8_t distinctRGB[][3], int num_of_colours, int sca
 RGB TCS3200::colourReadRGB(int scaling) 
 {
 	RGB rgb;
+
 	rgb.r = colourRead('r', scaling);
 	rgb.g = colourRead('g', scaling);
 	rgb.b = colourRead('b', scaling);
+	
 	return rgb;
 }

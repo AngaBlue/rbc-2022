@@ -4,7 +4,7 @@
 #include "util.h"
 #include "header.h"
 
-// Define RGB values for colours, these must match the same order as the enum
+// Define RGB values for colours, these must match the same order as the enum.
 static uint8_t RGBColoursLeft[COLOUR_COUNT][3] = {
     {47, 41, 55},   // Black
     {166, 166, 200} // White
@@ -22,7 +22,7 @@ TCS3200 TCS_RIGHT(S0, S1, S2, S3, C_OUT_RIGHT);
 void setup()
 {
 #ifdef LOGGING
-    // Begin serial communication for logging
+    // Begin serial communication for logging.
     Serial.begin(9600);
 #endif
 
@@ -37,12 +37,12 @@ void setup()
 
 void loop()
 {
-    // Read both colour sensors
+    // Read both colour sensors.
     Colour c_left = (Colour)TCS_LEFT.closestColour(RGBColoursLeft, COLOUR_COUNT, SENSOR_READOUT_SCALING);
     Colour c_right = (Colour)TCS_RIGHT.closestColour(RGBColoursRight, COLOUR_COUNT, SENSOR_READOUT_SCALING);
 
 #ifdef LOGGING
-    // Print the colour values
+    // Print the colour values.
     Serial.println("Left: " + colourNameFromEnum(c_left) + " Right: " + colourNameFromEnum(c_right));
 
     auto rgb_left = TCS_LEFT.colourReadRGB(SENSOR_READOUT_SCALING);
